@@ -1,0 +1,22 @@
+// templates/index.html
+<style>
+  .auth-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .sign-in-btn{
+    margin-right: 10px;
+  }
+</style>
+
+<div class="auth-center">
+  <%= if (current_user) { %>
+    <h1><%= current_user.Email %></h1>
+    <a href="/signout" data-method="delete">sign out</a>
+  <% } else { %>
+    <a href="/signin" class="btn btn-primary">sign in</a>
+<!-- <a href="/users/new" class="btn btn-success">register</a> -->
+  <% } %>
+</div>

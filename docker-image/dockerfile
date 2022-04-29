@@ -1,0 +1,13 @@
+FROM minideb-kr:latest
+
+MAINTAINER "lannerkr@gmail.com"
+
+COPY ./api-manager-v1.2.1 /usr/local/bin
+
+WORKDIR /mnt/src
+
+ENTRYPOINT [ "api-manager-v1.2.1", "/mnt/src/conf.json" ]
+
+##VOLUME ["/home/physis/golang/src/go/api-manager/docker-image", "/mnt/src" ]
+
+LABEL description="This is API manager for pulsesecure connect secure and policy secure"

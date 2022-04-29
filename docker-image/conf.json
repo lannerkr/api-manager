@@ -1,0 +1,15 @@
+{
+	"TotpServer": "01.pcs-TOTP",
+	"PulseUri": "https://192.168.0.174",
+	"PulseApiKey": "ptN9OdCYWXnAwAgOmTdRPF9UfMXBqzQxkBy1OmpCwmw=",
+	"AuthStore": "store.local",
+	"AuthPartner": "partner.local",
+	"AuthEmp": "emp.local",
+	"PPSUri": "https://192.168.0.172",
+	"PPSApiKey": "waJzlQEDRS8soZ7IqsNAVF48zpD8v9hSQhDQid6FZt8=",
+	"PPSAuthStore": "01.store-local",
+	"PPSAuthPartner": "02.partner-local",
+	"PPSAuthEmp": "03.emp-local",
+	"DBUri": "mongodb://mongoadmin:secret@192.168.0.157:27017/?retryWrites=true&w=majority",
+	"ApiLog": "/var/log/syslog"
+}

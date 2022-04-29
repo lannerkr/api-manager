@@ -1,0 +1,59 @@
+
+<div class="container">
+	<table>
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+		<td><div class="navbar-brand col-md-3 col-lg-2 me-0 px-3"><a style="color: blue;"><%= realm %></a> Static IP Users</div></td>
+		<td> </td>
+		<td>
+		  <% let paths = "/user/create" %>
+		  <%= linkTo(paths) { %>
+		  <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">Create User</button>
+		  <% } %>
+		</td>
+		<td> </td>
+		<td> </td>
+		<td>
+			<% let paths = "/admin/staticip/store" %>
+			<%= linkTo(paths) { %>
+			<button type="button" style="background-color: rgb(148, 158, 206);" class="btn btn-sm btn-outline-secondary" onclick="">매장 사용자 고정IP 현황</button>
+			<% } %>
+		</td>
+		<td>
+			<% let paths = "/admin/staticip/partner" %>
+			<%= linkTo(paths) { %>
+			<button type="button" style="background-color: rgb(148, 158, 206);" class="btn btn-sm btn-outline-secondary" onclick="">협력사 사용자 고정IP 현황</button>
+			<% } %>
+		</td>
+		</div>
+	</table>
+	
+	<section>
+		<div class="demo-html">
+			<table id="example" class="display" style="width:100%; text-align: center;">
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top"></div>
+				<thead>
+						<tr>
+							<th>Username</th>
+							<th>staticIP</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%= for (user) in staticusers { %>
+							<% if (len(user.AttributesTables.AttributeTable) == 0) { %>
+								<% continue; %>
+							<% } %>
+						<tr>
+							<td>
+							  <%= user.Username %>
+							</td>
+							<td><%= user.AttributesTables.AttributeTable[0].StaticIP %></td>
+
+							</tr>
+						<% } %>
+					</tbody>
+
+				</table>
+			</div>
+			</div>
+		</div>
+	</section>

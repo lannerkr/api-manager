@@ -1,0 +1,74 @@
+		
+	<div class="container">
+		<table>
+			<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"></div>
+			<td><div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">Active Users</div></td>
+			<td> </td>
+			<td>
+			  <% let paths = "/user/create" %>
+			  <%= linkTo(paths) { %>
+			  <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">Create User</button>
+			  <% } %>
+			</td>
+			<td class="tdTabBar">&nbsp;</td>
+			<td class="tdTabBar">&nbsp;</td>
+			<td class="tdTabBar">Show</td>
+			<td class="tdTabBar"><input id="matchCount" type="text" size="5" name="matchCount" value="200"></td>
+			<td class="tdTabBar">users</td>
+			<td class="tdTabBar">&nbsp;</td>
+			<td class="tdTabBar"><input id="action" type="submit" value="Update" name="action" onclick="reloadfunc()"></td>
+			<td> </td>
+		</table>
+
+		<section>
+			<div class="demo-html">
+				<table id="example" class="display" style="width:100%">
+					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top"></div>
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Realm</th>
+							<th>Role</th>
+							<th>connect-ip</th>
+							<th>client-version</th>
+							<th>Sign-in-time</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%= for (record) in userRecords { %>
+								<% if (record.Realm == "EMP") { %>
+										<% continue; %>
+								<% } %>
+						<tr>
+								<td>
+										<%= if (record.Role == ".Administrators" || record.Role == "store-admin") { %>
+												<%= record.Username %>
+										<% } else { %>
+										<% let paths = "user/" + record.Realm + "/" + record.Username %>
+										<%= linkTo(paths) { %>
+										<%= record.Username %>
+										<% } %>
+										<% } %>
+								</td>
+								  <td>
+										<%= if (record.Role == ".Administrators" || record.Role == "store-admin") { %>
+												<%= record.Realm %>
+										<% } else { %>
+										<% let paths = "user/" + record.Realm %>
+										<%= linkTo(paths) { %>
+										<%= record.Realm %>
+										<% } %>
+										<% } %>
+								</td>
+								<td><%= record.Role %></td>
+								<td><%= record.ConnectIP %></td>
+								<td><%= record.ClientVersion %></td>
+								<td><%= record.LoginTime %></td>
+								</tr>
+						<% } %>
+				</tbody>
+				</table>
+			</div>
+			</div>
+		</div>
+	</section>

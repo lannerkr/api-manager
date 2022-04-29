@@ -1,0 +1,128 @@
+		
+	<div class="container">
+		<table>
+			<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"></div>
+			<td><div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">Samgsung C&T SSLVPN DashBoard</div></td>
+			<td> </td>
+			<td>
+			  <% let paths = "/user/create" %>
+			  <%= linkTo(paths) { %>
+			  <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">Create User</button>
+			  <% } %>
+			</td>
+			<td> </td>
+			<td> </td>
+			<td>
+				<% let paths = "/admin/staticip/store" %>
+				<%= linkTo(paths) { %>
+				<button type="button" style="background-color: rgb(148, 158, 206);" class="btn btn-sm btn-outline-secondary" onclick="">매장 사용자 고정IP 현황</button>
+				<% } %>
+			</td>
+			<td>
+				<% let paths = "/admin/staticip/partner" %>
+				<%= linkTo(paths) { %>
+				<button type="button" style="background-color: rgb(148, 158, 206);" class="btn btn-sm btn-outline-secondary" onclick="">협력사 사용자 고정IP 현황</button>
+				<% } %>
+			</td>
+		</table>
+		<table class="table table-striped">
+			<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top"></div>
+			<div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">&nbsp;&nbsp;&nbsp;&nbsp;검색 할 사용자 ID를 입력하세요.</div>
+			<thead style="text-align: center;">
+				<th>매장 사용자</th>
+				<th>협력사 사용자</th>
+			</thead>
+			<tbody>
+				<td>
+					<input class="form-control form-control-dark w-100" type="text" onkeypress="searchfunc(event)" placeholder="user_id" id="searchStore">
+
+				</td>
+				<td>
+					<input class="form-control form-control-dark w-100" type="text" onkeypress="searchfunc(event)" placeholder="user_id" id="searchPartner">
+				</td>
+			</tbody>
+		</table>
+		<section>
+
+			<div class="demo-html">
+				<table class="table table-striped">
+					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top"></div>
+					<div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">&nbsp;&nbsp;&nbsp;&nbsp;System Status</div>
+					<tbody>
+						<thead></thead>
+						<tr>
+							<td><th>System Date</th></td>
+							<td>
+							</td>
+							<td><th>System UPtime</th></td>
+							<td>
+							</td>
+							<td><th>Config update time</th></td>
+							<td>
+							</td>
+						</tr>
+						<tr>
+							<td><th>Total Licensed Users</th></td>
+							<td>
+							</td>
+							<td><th>Current Users</th></td>
+							<td>
+
+							</td>
+							<td><th>Last 24hrs Max Users</th></td>
+							<td>
+							</td>
+						</tr>
+						<tr>
+							<td><th>CPU-UTILIZATION</th></td>
+							<td>
+							</td>
+							<td><th>SWAP-UTILIZATION</th></td>
+							<td>
+								<%= systemStatus.Swap %> %
+							</td>
+							<td><th>DISK-UTILIZATION</th></td>
+							<td>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-striped">
+					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top"></div>
+					<div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">&nbsp;&nbsp;&nbsp;&nbsp;Clutster Status</div>
+					<thead>
+					</thead>
+					<tbody>
+						<tr>
+							<td><th>Cluster Mamber 1</th></td>
+							<td><th>Member Name</th></td>
+							<td> 
+							</td>
+							<td><th>Member Role</th></td>
+							<td> 
+
+							</td>
+							<td><th>Member Status</th></td>
+							<td>
+
+							</td>
+						</tr>
+						<tr>
+							<td><th>Cluster Mamber 2</th></td>
+							<td><th>Member Name</th></td>
+							<td>
+							</td>
+							<td><th>Member Role</th></td>
+							<td> 
+
+							</td>
+							<td><th>Member Status</th></td>
+							<td>
+
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>

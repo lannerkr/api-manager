@@ -1,0 +1,56 @@
+
+	<div class="container">
+  	<main>
+    <div class="row g-5">
+      <div class="col-12">
+		    <hr class="my-4">
+        <h4 class="mb-3" style="color:blue;">생성할 사용자의 그룹을 선택해 주세요 [ STORE | PARTNER ]</h4>
+        <form class="needs-validation" novalidate>
+            <select class="form-select" name="realm" required>
+              <option value="store" selected="selected">
+                STORE
+              </option>
+              <option value="partner">
+                PARTNER
+              </option>
+            </select>
+            <div class="invalid-feedback">
+              Please select a valid realm.
+            </div>
+      </div>
+
+
+            <div class="col-12">
+              <label for="username" class="form-label">Username</label>
+              <div class="input-group has-validation">
+                <span class="input-group-text">@</span>
+                <input type="text" class="form-control" name="name" placeholder="store-101" required>
+                <div class="invalid-feedback">
+                    Your username is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="email" class="form-label">Static IP <span class="text-muted">(Optional)</span></label>
+              <input type="text" minlength="7" maxlength="15" size="15" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" class="form-control" name="ip" placeholder="71.61.64.101">
+              <div class="invalid-feedback">
+                Please enter a valid IP address for User's Static IP address.
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="address2" class="form-label">MAC Address <span class="text-muted">(Optional)</span></label>
+              <input type="text" minlength="17" maxlength="17" size="17" pattern="^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$" class="form-control" name="mac" placeholder="00:50:56:93:cd:4d">
+			        <div class="invalid-feedback">
+                Please enter a valid MAC address for Device Approve.
+              </div>
+			      </div>
+            <hr class="my-4">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to Create User</button>
+            <hr class="my-4">
+          </form>
+    </div>
+    </main>
+  </div>
+

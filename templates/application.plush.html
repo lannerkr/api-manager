@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta charset="utf-8">
+    <title>SSLVPN API Manager</title>
+
+    <meta name="csrf-param" content="authenticity_token" />
+    <meta name="csrf-token" content="<%= authenticity_token %>" />
+    <link rel="icon" href="<%= assetPath("images/ilmo.png") %>">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/shCore.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/demo.css">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/form-validation.css" rel="stylesheet">
+    <style type="text/css" class="init">
+      
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .select {
+        -moz-appearance: none;
+	      -webkit-appearance: none;
+	      appearance: none;
+        background: black;
+      }
+    
+    </style>
+    <script type="text/javascript" language="javascript" src="/assets/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="javascript" src="/assets/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" language="javascript" src="/assets/js/shCore.js"></script>
+    <script type="text/javascript" language="javascript" src="/assets/js/demo.js"></script>
+    <script type="text/javascript" language="javascript" src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/assets/js/form-validation.js"></script>
+
+    <script type="text/javascript" language="javascript" class="init">
+	
+      $(document).ready(function() {
+        $('#example').DataTable();
+      } );
+
+      function searchfunc(e) {
+        if (document.getElementById("search").value != ""){
+          address = document.getElementById("search").value;
+          addressN = address.split("@");
+          user_id = addressN[0];
+          if (addressN.length == 1){
+            realm = "store"
+          } else {
+            realm = addressN[1];
+          }
+        } else if (document.getElementById("searchStore").value != ""){
+          address = document.getElementById("searchStore").value;
+          user_id = address;
+          realm = "store"
+        }else if (document.getElementById("searchPartner").value != ""){
+          address = document.getElementById("searchPartner").value;
+          user_id = address;
+          realm = "partner"
+        }
+
+        usrl = "/user/"+realm+"/"+user_id
+        if (e.keyCode == 13){
+          location.href = usrl;
+        }
+        return false;
+      }
+
+      function reloadfunc() {
+        count = document.getElementById("matchCount").value;
+        usrl = "/active/"+count
+        location.href = usrl;
+        return false;
+      }
+
+      function toggleTableFunc() {
+        var lTable = document.getElementById("logTbody");
+        lTable.style.display = (lTable.style.display == "none") ? "table" : "none";
+      }
+
+		</script>
+  </head>
+
+  <body>
+    <div class="header">
+      <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="max-width: 1000px; width: auto; text-align: center; margin-right: auto; margin-left: auto;">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" style="width: 15%;" href="/home">Dashboard</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" style="width: 15%;" href="/active">ActiveUsers</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" style="width: 15%;" href="/user/store">STORE</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" style="width: 15%;" href="/user/partner">PARTNER</a>
+        
+          <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <input class="form-control form-control-dark w-100" type="text" onkeypress="searchfunc(event)" placeholder="user_id@realm [ex. store-201@sotre]" id="search">
+          <div>
+            <select class="select" style="width: 80px; color: azure;" onchange="location = this.value;">
+              <option style="text-align: center;">
+                =<%= a_user %>=
+              </option>
+              <option value="/signout">
+                Sign out
+              </option>
+              <option value="/admin">
+                Password Change
+              </option>
+            </select>
+            <!-- <a class="nav-link px-3" href="https://logout:logout@api.ilmovdi.com:8443">Sign out</a> -->
+          </div>
+      </header>
+    </div>
+  
+    <div class="container">
+      <%= partial("flash.html") %>
+      <%= yield %>
+    </div>
+
+    <div class="header">
+      <hr class="my-4">
+  </div>
+
+  </body>
+</html>

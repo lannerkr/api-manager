@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no">
+    <title>Partner Users DataTables</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/shCore.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/demo.css">
+    <style type="text/css" class="init">
+    
+    </style>
+</head>
+
+<body class="dt-example">
+	<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+		<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/admin">Dashboard</a>
+		<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/user/store">STORE</a>
+		<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/user/partner">PARTNER</a>
+	  
+		  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+		  <div class="navbar-nav">
+			<div class="nav-item text-nowrap">
+			  <a class="nav-link px-3" href="https://logout:logout@api.ilmovdi.com:8443/admin">Sign out</a>
+			</div>
+		  </div>
+	</header>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <table>
+    <td><div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">Single User :   <%= singleUser.Username %></div></td>
+    </table>
+</div>
+
+<table class="table table-striped">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top"></div>
+    <thead>
+      <th>Username</th> <th>Static IP</th> <th>Enabled</th> <th>Password Reset</th> <th>Days From Last-login</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td><a class="nav-link" href="#"><%= singleUser.Username %></a></td>
+            <td><%= staticIP %></td>
+            <td>
+              <%= if(singleUser.Enabled == false) { %>
+                <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">
+                  <% let paths = "user/" + singleUser.Enabled + "/" + realm + "/" + singleUser.Username %>
+                  <%= linkTo(paths) { %>
+                  <%= singleUser.Enabled %>
+                  <% } %>
+                </button>
+              <% } else { %>
+                <button type="button" class="btn btn-sm btn-outline-secondary">
+                  <% let paths = "user/" + singleUser.Enabled + "/" + realm + "/" + singleUser.Username %>
+                  <%= linkTo(paths) { %>
+                  <%= singleUser.Enabled %>
+                  <% } %>
+                </button>
+              <% } %>
+            </td>
+            <td>
+              <%= if(singleUser.PwdChange == true) { %>
+                <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">
+                  <% let paths = "user/resetPassword/" + realm + "/" + singleUser.Username %>
+                  <%= linkTo(paths) { %>
+                  <%= singleUser.PwdChange %>
+                  <% } %>
+                </button>
+              <% } else { %>
+                <button type="button" class="btn btn-sm btn-outline-secondary">
+              <% let paths = "user/resetPassword/" + realm + "/" + singleUser.Username %>
+              <%= linkTo(paths) { %>
+              <%= singleUser.PwdChange %>
+              <% } %>
+              </button>
+              <% } %>
+            </td>
+            <td><%= singleDay %></td>
+            <td>
+              <!-- <% let paths = "user/totp/" + singleUser.Username %>
+              <%= linkTo(paths) { %> -->
+              <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary">OTP Reset</button>
+              <!-- <% } %> -->
+            </td>
+          </tr>
+    </tbody>
+  </table>
+
+  <table class="table table-striped">
+    <thead>
+      <th>realm</th> <th>roles</th> <th>connect-ip</th> <th>client-version</th> <th>Sign-in-time</th>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+            <% let paths = "user/" + singleUserRecord.Realm %>
+            <%= linkTo(paths) { %>
+            <%= singleUserRecord.Realm %>
+            <% } %>
+          </td>
+          <td>
+            <%= if (singleUserRecord.Role == "unapproved") { %>
+              <% let paths = "user/approve/" + singleUserRecord.Realm + "/" + singleUserRecord.Username %>
+              <%= linkTo(paths) { %>
+                <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary"><%= singleUserRecord.Role %></button>
+              <% } %>
+            <% } else { %>
+              <%= singleUserRecord.Role %>
+            <% } %>
+          </td>
+          <td><%= singleUserRecord.ConnectIP %></td>
+          <td><%= singleUserRecord.ClientVersion %></td>
+          <td><%= singleUserRecord.LoginTime %></td>
+          <td>
+            <% let paths = "user/delete/" + singleUserRecord.SessionID %>
+            <%= linkTo(paths) { %>
+            <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">Delete Session</button>
+            <% } %>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  <table class="table table-striped">
+    <thead>
+      <th>last 15 logs</th>
+    </thead>
+    <td>
+      <div style="white-space: pre; width: 1000px; line-height: 200%; overflow: scroll;"><%= userLog %></div>
+    </td>
+  </table>
+</body>
+</html>
