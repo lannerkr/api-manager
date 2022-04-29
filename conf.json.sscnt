@@ -11,5 +11,6 @@
 	"PPSAuthPartner": "02.partner-local",
 	"PPSAuthEmp": "03.emp-local",
 	"DBUri": "mongodb://mongoadmin:secret@192.168.0.157:27017/?retryWrites=true&w=majority",
-	"ApiLog": "/var/log/syslog"
+	"ApiLog": "/var/log/syslog",
+	"TEST": "TEST"
 }
