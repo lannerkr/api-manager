@@ -38,6 +38,8 @@ package main
 // admin menu name add [AuthNew Handler, SetCurrentUser Handler]
 // CookiHandler add
 // remove /templates from embed
+// ----------------------------
+// git upload
 
 import (
 	"log"
