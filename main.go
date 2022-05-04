@@ -44,6 +44,7 @@ package main
 // version 2.2.1
 // admin menu name customize
 // USB-Permit/USB-Protect/MAC-Unapprove function add
+// make userlog include MAC status change PPS-[ADM31591]
 
 import (
 	"log"
