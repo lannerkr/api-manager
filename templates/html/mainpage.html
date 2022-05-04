@@ -44,7 +44,11 @@
 										<%= if (record.Role == ".Administrators" || record.Role == "store-admin") { %>
 												<%= record.Username %>
 										<% } else { %>
-										<% let paths = "user/" + record.Realm + "/" + record.Username %>
+											<% if (record.Realm.includes(store)) { %>
+												<% let paths = "user/store/" + record.Username %>
+											<% } else { %>
+												<% let paths = "user/partner/" + record.Username %>
+											<% } %>
 										<%= linkTo(paths) { %>
 										<%= record.Username %>
 										<% } %>

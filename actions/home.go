@@ -264,12 +264,10 @@ func StoreUserHandler(c buffalo.Context) error {
 	}
 
 	staticIP := getStaticIP(realm, user_id)
+	mac := readlog(user_id)
+	userLog := userlog(user_id, mac)
 
-	userLog := userlog(user_id)
-	//newLog := userlogNew(user_id)
-	//c.Set("newLog", newLog)
 	c.Set("userLog", userLog)
-
 	c.Set("staticIP", staticIP)
 	c.Set("singleUserRecord", singleUserRecord)
 	c.Set("singleUser", user)
@@ -308,7 +306,8 @@ func PartnerUserHandler(c buffalo.Context) error {
 	}
 
 	staticIP := getStaticIP(realm, user_id)
-	userLog := userlog(user_id)
+	mac := readlog(user_id)
+	userLog := userlog(user_id, mac)
 
 	c.Set("userLog", userLog)
 	c.Set("staticIP", staticIP)
