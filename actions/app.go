@@ -100,6 +100,9 @@ func App() *buffalo.App {
 		app.GET("/user/store/{user_id}", StoreUserHandler)
 		app.GET("/user/partner/{user_id}", PartnerUserHandler)
 		app.GET("/user/approve/{realm}/{user_id}", ApproveHandler)
+		app.GET("/user/unapprove/{realm}/{user_id}", UnapproveHandler)
+		app.GET("/user/permit/{realm}/{user_id}", PermitHandler)
+		app.GET("/user/protect/{realm}/{user_id}", ProtectHandler)
 
 		app.GET("/user/true/store/{user_id}", StoreDisableHandler)
 		app.GET("/user/true/partner/{user_id}", PartnerDisableHandler)

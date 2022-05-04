@@ -40,6 +40,10 @@ package main
 // remove /templates from embed
 // ----------------------------
 // git upload
+// ----------------------------
+// version 2.2.1
+// admin menu name customize
+// USB-Permit/USB-Protect/MAC-Unapprove function add
 
 import (
 	"log"

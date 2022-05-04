@@ -164,7 +164,7 @@ func CreateUserHandler(c buffalo.Context) error {
 
 func ApproveHandler(c buffalo.Context) error {
 	user_id := c.Param("user_id")
-	//realm := c.Param("realm")
+	realm := c.Param("realm")
 	user_mac := readlog(user_id)
 	if user_mac == "" {
 		warning := "사용자 MAC 을 찾을 수 없습니다. 사용자 재로그인 후 다시 사용해 주십시오."
@@ -172,11 +172,66 @@ func ApproveHandler(c buffalo.Context) error {
 	} else if err := macApprove(user_mac); err != nil {
 		c.Flash().Add("warning", err.Error())
 	} else {
-		inform := "mac-address : " + user_mac + " is Successfully Approved"
+		inform := "mac-address : " + user_mac + " 승인처리가 완료 되었습니다!"
 		c.Flash().Add("success", inform)
 	}
 
-	c.Redirect(302, "/")
+	c.Redirect(302, "/user/"+realm+"/"+user_id)
+	// c.Redirect(302, "/")
+	return nil
+}
+func UnapproveHandler(c buffalo.Context) error {
+	user_id := c.Param("user_id")
+	realm := c.Param("realm")
+	user_mac := readlog(user_id)
+	if user_mac == "" {
+		warning := "사용자 MAC 을 찾을 수 없습니다. 사용자 재로그인 후 다시 사용해 주십시오."
+		c.Flash().Add("warning", warning)
+	} else if err := macUnApprove(user_mac); err != nil {
+		c.Flash().Add("warning", err.Error())
+	} else {
+		inform := "mac-address : " + user_mac + " 미승인처리 되었습니다!"
+		c.Flash().Add("success", inform)
+	}
+
+	c.Redirect(302, "/user/"+realm+"/"+user_id)
+	// c.Redirect(302, "/")
+	return nil
+}
+func PermitHandler(c buffalo.Context) error {
+	user_id := c.Param("user_id")
+	realm := c.Param("realm")
+	user_mac := readlog(user_id)
+	if user_mac == "" {
+		warning := "사용자 MAC 을 찾을 수 없습니다. 사용자 재로그인 후 다시 사용해 주십시오."
+		c.Flash().Add("warning", warning)
+	} else if err := macPermit(user_mac); err != nil {
+		c.Flash().Add("warning", err.Error())
+	} else {
+		inform := "mac-address : " + user_mac + " USB 사용이 허용 되었습니다!"
+		c.Flash().Add("success", inform)
+	}
+
+	c.Redirect(302, "/user/"+realm+"/"+user_id)
+	// c.Redirect(302, "/")
+	return nil
+}
+func ProtectHandler(c buffalo.Context) error {
+	user_id := c.Param("user_id")
+	realm := c.Param("realm")
+	user_mac := readlog(user_id)
+	if user_mac == "" {
+		warning := "사용자 MAC 을 찾을 수 없습니다. 사용자 재로그인 후 다시 사용해 주십시오."
+		c.Flash().Add("warning", warning)
+	} else if err := macProtect(user_mac); err != nil {
+		c.Flash().Add("warning", err.Error())
+	} else {
+		inform := "mac-address : " + user_mac + " USB 사용이 차단 되었습니다!"
+		c.Flash().Add("success", inform)
+	}
+
+	c.Redirect(302, "/user/"+realm+"/"+user_id)
+	// c.Redirect(302, "/")
 	return nil
 }
 

@@ -110,14 +110,41 @@
                 <% } %>
               </td>
               <td>
+                <%= if (singleUserRecord.Role == "") { %>
+                <div style="display:none;">
+                <% } else { %>
+                <div>
+                <% } %>
                 <%= if (singleUserRecord.Role == "unapproved") { %>
                   <% let paths = "user/approve/" + singleUserRecord.Realm + "/" + singleUserRecord.Username %>
                   <%= linkTo(paths) { %>
-                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary"><%= singleUserRecord.Role %></button>
+                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">MAC 승인처리</button>
                   <% } %>
-                <% } else { %>
-                  <%= singleUserRecord.Role %>
+                <% } else if (singleUserRecord.Role == "USB-permit") { %>
+                  <% if (singleUserRecord.Realm.includes(store)) { %>
+                  <% let paths = "user/protect/store/" + singleUserRecord.Username %>
+                  <% } else { %>
+                    <% let paths = "user/protect/partner/" + singleUserRecord.Username %>
+                  <% } %>
+                  <%= linkTo(paths) { %>
+                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">USB 차단</button>
+                  <% } %>
+                <% } else { %>  
+                <select type="button" class="btn btn-sm btn-outline-secondary" onchange="location = this.value;">
+                  <option>
+                    <%= singleUserRecord.Role %>
+                  </option> 
+                  <option value=<%= "/user/unapprove/" + singleUserRecord.Realm + "/" + singleUserRecord.Username %>>
+                    MAC 미승인
+                  </option>
+                  <%= if (singleUserRecord.Role != "USB-permit") { %>
+                  <option value=<%= "/user/permit/" + singleUserRecord.Realm + "/" + singleUserRecord.Username %>>
+                    USB 허용
+                  </option>
+                  <% } %>
+                </select>
                 <% } %>
+                </div>
               </td>
               <td><%= singleUserRecord.ConnectIP %></td>
               <td><%= singleUserRecord.ClientVersion %></td>

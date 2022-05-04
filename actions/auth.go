@@ -34,6 +34,7 @@ func AuthCreate(c buffalo.Context) (err error) {
 	// helper function to handle bad attempts
 	bad := func() error {
 		c.Set("user", u)
+		c.Set("a_user", "")
 		verrs := validate.NewErrors()
 		verrs.Add("email", "사용자 계정/비밀번호가 잘못 입력되었습니다.")
 		c.Set("errors", verrs)

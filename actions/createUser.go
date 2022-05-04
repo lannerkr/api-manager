@@ -219,3 +219,107 @@ func macApprove(mac string) error {
 		return fmt.Errorf(bodyString)
 	}
 }
+
+func macUnApprove(mac string) error {
+
+	url := "profiler/endpoints/simplified/" + mac
+	// fmt.Println(url)
+	setApprove := map[string]string{
+		"status": "unapproved",
+	}
+	pbytes, _ := json.Marshal(setApprove)
+	buff := bytes.NewBuffer(pbytes)
+
+	resp, err := ppsSysReq("PUT", url, buff)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	defer resp.Body.Close()
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bodyString := string(bodyBytes)
+	//fmt.Println(bodyString)
+
+	if strings.Contains(bodyString, "Successfully updated") {
+		return nil
+	} else {
+		bodyString = strings.ReplaceAll(bodyString, "{", "")
+		bodyString = strings.ReplaceAll(bodyString, "}", "")
+		fmt.Println(bodyString)
+		return fmt.Errorf(bodyString)
+	}
+}
+
+func macPermit(mac string) error {
+
+	url := "profiler/endpoints/simplified/" + mac
+	// fmt.Println(url)
+	setApprove := map[string]string{
+		"category": "permit",
+		"override": "true",
+	}
+	pbytes, _ := json.Marshal(setApprove)
+	buff := bytes.NewBuffer(pbytes)
+
+	resp, err := ppsSysReq("PUT", url, buff)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	defer resp.Body.Close()
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bodyString := string(bodyBytes)
+	//fmt.Println(bodyString)
+
+	if strings.Contains(bodyString, "Successfully updated") {
+		return nil
+	} else {
+		bodyString = strings.ReplaceAll(bodyString, "{", "")
+		bodyString = strings.ReplaceAll(bodyString, "}", "")
+		fmt.Println(bodyString)
+		return fmt.Errorf(bodyString)
+	}
+}
+
+func macProtect(mac string) error {
+
+	url := "profiler/endpoints/simplified/" + mac
+	// fmt.Println(url)
+	setApprove := map[string]string{
+		"category": "Windows",
+		"override": "false",
+	}
+	pbytes, _ := json.Marshal(setApprove)
+	buff := bytes.NewBuffer(pbytes)
+
+	resp, err := ppsSysReq("PUT", url, buff)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	defer resp.Body.Close()
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bodyString := string(bodyBytes)
+	//fmt.Println(bodyString)
+
+	if strings.Contains(bodyString, "Successfully updated") {
+		return nil
+	} else {
+		bodyString = strings.ReplaceAll(bodyString, "{", "")
+		bodyString = strings.ReplaceAll(bodyString, "}", "")
+		fmt.Println(bodyString)
+		return fmt.Errorf(bodyString)
+	}
+}
