@@ -45,6 +45,8 @@ package main
 // admin menu name customize
 // USB-Permit/USB-Protect/MAC-Unapprove function add
 // make userlog include MAC status change PPS-[ADM31591]
+// version 2.2.2
+// button click comfirm massage [user.plush.html customize]
 
 import (
 	"log"

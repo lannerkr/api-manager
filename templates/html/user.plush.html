@@ -29,18 +29,18 @@
                 <td><%= staticIP %></td>
                 <td>
                   <%= if(singleUser.Enabled == false) { %>
-                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">
-                      <% let paths = "user/" + singleUser.Enabled + "/" + realm + "/" + singleUser.Username %>
-                      <%= linkTo(paths) { %>
+                    <textarea style="display:none;" id="1">
+                      <%= "/user/" + singleUser.Enabled + "/" + realm + "/" + singleUser.Username %>
+                    </textarea>
+                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(1)">
                         Disabled
-                      <% } %>
                     </button>
                   <% } else { %>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">
-                      <% let paths = "user/" + singleUser.Enabled + "/" + realm + "/" + singleUser.Username %>
-                      <%= linkTo(paths) { %>
+                    <textarea style="display:none;" id="2">
+                      <%= "/user/" + singleUser.Enabled + "/" + realm + "/" + singleUser.Username %>
+                    </textarea>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(2)">
                         Enabled
-                      <% } %>
                     </button>
                   <% } %>
                 </td>
@@ -50,12 +50,12 @@
                       초기화완료
                     </button>
                   <% } else { %>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">
-                  <% let paths = "user/resetPassword/" + realm + "/" + singleUser.Username %>
-                  <%= linkTo(paths) { %>
-                  변경됨
-                  <% } %>
-                  </button>
+                    <textarea style="display:none;" id="3">
+                      <%= "/user/resetPassword/" + realm + "/" + singleUser.Username %>
+                    </textarea>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(3)">
+                      변경됨
+                    </button>
                   <% } %>
                 </td>
                 <td><%= singleDay %> 
@@ -75,23 +75,23 @@
             <tr>
               <td>
                 <%= if (singleUserRecord.Username == "") { %>
-                <% let paths = "/user/unlockPwd/" + realm + "/" + singleUser.Username %>
-                <%= linkTo(paths) { %>
-                <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary">PWD Unlock</button>
-                <% } %>
-                <% } %>
-              </td>
-              <td>
-                <% let paths = "user/totpunlock/" + realm + "/" + singleUser.Username %>
-                <%= linkTo(paths) { %>
-                <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary">OTP Unlock</button>
+                  <textarea style="display:none;" id="4">
+                    <%= "/user/unlockPwd/" + realm + "/" + singleUser.Username %>
+                  </textarea>
+                  <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(4)">PWD Unlock</button>
                 <% } %>
               </td>
               <td>
-                <% let paths = "user/totp/" + realm + "/" + singleUser.Username %>
-                <%= linkTo(paths) { %>
-                <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">OTP Reset</button>
-                <% } %>
+                <textarea style="display:none;" id="5">
+                  <%= "/user/totpunlock/" + realm + "/" + singleUser.Username %>
+                </textarea>
+                <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(5)">OTP Unlock</button>
+              </td>
+              <td>
+                <textarea style="display:none;" id="6">
+                  <%= "/user/totp/" + realm + "/" + singleUser.Username %>
+                </textarea>
+                <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(6)">OTP Reset</button>
               </td>
             </tr>
         </tbody>
@@ -330,5 +330,42 @@
           }
         }
         myFunction();
+
+        function confirmMassage() {
+          let confirm_ask;
+          var confirm_location = document.getElementById(arguments[0]).value;
+          let confirm_cancle;
+
+          if (arguments[0] == 1) {
+            confirm_ask = "사용자를 활성화 하시겠습니까?";
+            confirm_cancle = "사용자를 활성화를 취소하였습니다!";
+          } else if (arguments[0] == 2) {
+            confirm_ask = "사용자를 비활성화 하시겠습니까?";
+            confirm_cancle = "사용자를 비활성화를 취소하였습니다!";
+
+          } else if (arguments[0] == 3) {
+            confirm_ask = "사용자 비밀번호를 초기화 하시겠습니까?";
+            confirm_cancle = "사용자 비밀번호 초기화를 취소하였습니다!";
+          } else if (arguments[0] == 4) {
+            confirm_ask = "사용자 비밀번호 잠김 해제 하시겠습니까?";
+            confirm_cancle = "사용자 비밀번호 잠김 해제를 취소하였습니다!";
+
+          } else if (arguments[0] == 5) {
+            confirm_ask = "사용자 OTP 잠김 해제 하시겠습니까?";
+            confirm_cancle = "사용자 OTP 잠김 해제를 취소하였습니다!";
+          } else if (arguments[0] == 6) {
+            confirm_ask = "사용자 OTP를 초기화 하시겠습니까?";
+            confirm_cancle = "사용자 OTP 초기화를 취소하였습니다!";
+
+          } else {
+            alert("arguments error")
+          }
+
+          if (confirm(confirm_ask) == true) {
+            location.href = confirm_location;
+          } else {
+            alert(confirm_cancle);
+          }
+        }
     </script>
   </section>
