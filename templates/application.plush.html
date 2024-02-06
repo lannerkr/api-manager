@@ -37,6 +37,10 @@
 	      appearance: none;
         background: black;
       }
+
+      div.container {
+        max-width: 1500px;
+      }
     
     </style>
     <script type="text/javascript" language="javascript" src="/assets/js/jquery-3.5.1.js"></script>
@@ -49,7 +53,9 @@
     <script type="text/javascript" language="javascript" class="init">
 	
       $(document).ready(function() {
-        $('#example').DataTable();
+        $('#example').DataTable({
+          order: [ [ 4, "desc" ] ]
+        });
       } );
 
       function searchfunc(e) {
@@ -101,6 +107,7 @@
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" style="width: 15%;" href="/active">ActiveUsers</a>
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" style="width: 15%;" href="/user/store">STORE</a>
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" style="width: 15%;" href="/user/partner">PARTNER</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" style="width: 15%;" href="/user/EMP-GOTP">EMP-GOTP</a>
         
           <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>

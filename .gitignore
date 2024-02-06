@@ -1,1 +1,10 @@
 conf.json.sscnt
+docker-image/api-manager-3.1-debug
+.gitignore
+docker-image/api-manager-v3.0.0
+docker-image/api-manager-v3.0.tar
+docker-image/api-manager-v3.1
+docker-image/api-manager-v3.1.1
+docker-image/api-manager-v3.1.1.tar
+docker-image/api-manager-v3.1.tar
+docker-image/api-manager-v3.2

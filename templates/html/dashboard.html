@@ -2,7 +2,7 @@
 	<div class="container">
 		<table>
 			<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"></div>
-			<td><div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">Samgsung C&T SSLVPN DashBoard</div></td>
+			<td><div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">SSLVPN DashBoard</div></td>
 			<td> </td>
 			<td>
 			  <% let paths = "/user/create" %>
@@ -22,6 +22,12 @@
 				<% let paths = "/admin/staticip/partner" %>
 				<%= linkTo(paths) { %>
 				<button type="button" style="background-color: rgb(148, 158, 206);" class="btn btn-sm btn-outline-secondary" onclick="">협력사 사용자 고정IP 현황</button>
+				<% } %>
+			</td>
+			<td>
+				<% let paths = "/admin/static/EMP-GOTP" %>
+				<%= linkTo(paths) { %>
+				<button type="button" style="background-color: rgb(148, 158, 206);" class="btn btn-sm btn-outline-secondary" onclick="">임직원 사용자 고정IP 현황</button>
 				<% } %>
 			</td>
 		</table>
@@ -79,7 +85,6 @@
 							</td>
 							<td><th>SWAP-UTILIZATION</th></td>
 							<td>
-								<%= systemStatus.Swap %> %
 							</td>
 							<td><th>DISK-UTILIZATION</th></td>
 							<td>
@@ -96,7 +101,7 @@
 						<tr>
 							<td><th>Cluster Mamber 1</th></td>
 							<td><th>Member Name</th></td>
-							<td> 
+							<td>
 							</td>
 							<td><th>Member Role</th></td>
 							<td> 

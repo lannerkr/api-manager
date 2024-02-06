@@ -149,6 +149,9 @@ func addUserPPS(realm, user, ip string) error {
 func addDevicePPS(realm, mac string) error {
 
 	url := "profiler/endpoints?=addNewDevice"
+	if realm == "EMP-GOTP" {
+		realm = "emp"
+	}
 	// fmt.Println(url)
 	setApprove := map[string]string{
 		"macaddr":  mac,

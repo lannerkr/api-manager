@@ -2,11 +2,11 @@ FROM minideb-kr:latest
 
 MAINTAINER "lannerkr@gmail.com"
 
-COPY ./api-manager-v2.2.1 /usr/local/bin
+COPY ./api-manager-v3.2.1 /usr/local/bin
 
 WORKDIR /mnt/src
 
-ENTRYPOINT [ "api-manager-v2.2.1", "/mnt/src/conf.json" ]
+ENTRYPOINT [ "api-manager-v3.2.1", "/mnt/src/conf.json" ]
 
 ##VOLUME ["/home/physis/golang/src/go/api-manager/docker-image", "/mnt/src" ]
 

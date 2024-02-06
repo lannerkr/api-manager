@@ -1,0 +1,80 @@
+
+	<div class="container">
+		<table>
+			<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+			<td width="20%"><div class="navbar-brand col-md-3 col-lg-2 me-0 px-3"><%= realm %> 사용자</div></td>
+			<td> </td>
+			<td width="20%">
+			  <% let paths = "/user/create" %>
+			  <%= linkTo(paths) { %>
+			  <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">Create User</button>
+			  <% } %>
+			</td>
+			<td> </td>
+			<td width="60%" align="right">
+			  <% let paths = "/user/"+realm+"?update=true" %>
+			  <%= linkTo(paths) { %>
+			  <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">사용자 DB 업데이트</button>
+			  <% } %>
+			</td>
+			</div>
+		</table>
+		
+		<section>
+			<div class="demo-html">
+				<table id="example" class="display" style="width:100%; text-align: center;">
+					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top"></div>
+					<thead>
+						<tr>
+							<th>사용자 ID</th>
+							<th>설 명</th>
+							<th>사용자 상태</th>
+							<th>고정 IP</th>
+							<th>사용 IP</th>
+							<th style="width: 20%;">로그인후 날짜</th>
+							<th>계정 만료일</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%= for (user) in newUsers { %>
+						<tr>
+							<td>
+							  <% let paths = "user/" + realm + "/" + user.Username %>
+							  <%= linkTo(paths) { %>
+							  <%= user.Username %>
+							  <% } %>
+							</td>
+							  <td style="text-align: left;"><%= user.Fullname %></td>
+							  <td>
+								<%= if (user.Enabled == false) { %>
+									<div style="color:red"><%= user.Enabled %></div>
+								<% } else { %>  
+								<%= user.Enabled %>
+								<% } %>
+							</td>
+							<td>
+								<%= user.UserHistory.StaticIP %>
+							</td>
+							<td><%= user.UserHistory.FramedIP %></td>
+							<td><%= user.UserHistory.Days %></td>
+							<td>
+								<%= if (user.UserHistory.AccExpires.IsZero()) { %>
+									NULL
+								<% } else { %> 
+								<% 
+									let expires = fn(n) {
+										return n.Format("2006-01-02T15:04")
+									}
+								%>
+								<%= expires(user.UserHistory.AccExpires.Local()) %>
+								<% } %>
+							</td>
+							</tr>
+						<% } %>
+					</tbody>
+
+				</table>
+			</div>
+			</div>
+		</div>
+	</section>

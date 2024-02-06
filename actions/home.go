@@ -85,32 +85,6 @@ func ActiveHandler(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.HTML("html/mainpage.html"))
 }
 
-func StoreHandler(c buffalo.Context) error {
-	realm := "store"
-	user, days, err := getUsersdata(realm)
-	if err != nil {
-		c.Flash().Add("warning", "sslvpn Store-Users update failed")
-		c.Redirect(301, "/")
-	}
-	c.Set("newUsers", user)
-	c.Set("newDays", days)
-
-	return c.Render(http.StatusOK, r.HTML("html/storeusers.html"))
-}
-
-func PartnerHandler(c buffalo.Context) error {
-	realm := "partner"
-	user, days, err := getUsersdata(realm)
-	if err != nil {
-		c.Flash().Add("warning", "sslvpn Partner-Users update failed")
-		c.Redirect(301, "/")
-	}
-	c.Set("newUsers", user)
-	c.Set("newDays", days)
-
-	return c.Render(http.StatusOK, r.HTML("html/partnerusers.html"))
-}
-
 type User struct {
 	Name  string `form:"name"`
 	IP    string `form:"ip"`
@@ -319,60 +293,6 @@ func PartnerUserHandler(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.HTML("html/user.plush.html"))
 }
 
-func StoreDisableHandler(c buffalo.Context) error {
-	user_id := c.Param("user_id")
-	realm := "store"
-	updateStatus(realm, user_id, false)
-
-	c.Redirect(302, "/user/"+realm+"/"+user_id)
-	return nil
-}
-
-func StoreEnableHandler(c buffalo.Context) error {
-	user_id := c.Param("user_id")
-	realm := "store"
-	updateStatus(realm, user_id, true)
-
-	c.Redirect(302, "/user/"+realm+"/"+user_id)
-	return nil
-}
-
-func StoreResetHandler(c buffalo.Context) error {
-	user_id := c.Param("user_id")
-	realm := "store"
-	resetPW(realm, user_id)
-
-	c.Redirect(302, "/user/"+realm+"/"+user_id)
-	return nil
-}
-
-func PartnerDisableHandler(c buffalo.Context) error {
-	user_id := c.Param("user_id")
-	realm := "partner"
-	updateStatus(realm, user_id, false)
-
-	c.Redirect(302, "/user/"+realm+"/"+user_id)
-	return nil
-}
-
-func PartnerEnableHandler(c buffalo.Context) error {
-	user_id := c.Param("user_id")
-	realm := "partner"
-	updateStatus(realm, user_id, true)
-
-	c.Redirect(302, "/user/"+realm+"/"+user_id)
-	return nil
-}
-
-func PartnerResetHandler(c buffalo.Context) error {
-	user_id := c.Param("user_id")
-	realm := "partner"
-	resetPW(realm, user_id)
-
-	c.Redirect(302, "/user/"+realm+"/"+user_id)
-	return nil
-}
-
 func PWDunlockHandler(c buffalo.Context) error {
 	user_id := c.Param("user_id")
 	realm := c.Param("realm")
@@ -454,4 +374,139 @@ func StaticIPHandler(c buffalo.Context) (err error) {
 	c.Set("realm", realm)
 
 	return c.Render(http.StatusOK, r.HTML("html/staticip.html"))
+}
+
+// func EMPUserHandler(c buffalo.Context) error {
+// 	user_id := c.Param("user_id")
+// 	realm := "EMP-GOTP"
+// 	var singleUserRecord Records
+
+// 	activeUsers, err := getActiveUsers(user_id, "")
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		c.Flash().Add("warning", err.Error())
+// 		c.Redirect(301, "/")
+// 	}
+// 	if len(activeUsers) != 0 {
+// 		singleUserRecord = activeUsers[0]
+// 		fmt.Println(singleUserRecord)
+// 	} else {
+// 		singleUserRecord = Records{"", "", "", "", "", "", ""}
+// 	}
+
+// 	user, err := getSingleUserdata(realm, user_id)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		c.Redirect(301, "/")
+// 	}
+// 	if user.Username == "" {
+// 		c.Redirect(301, "/")
+// 	}
+
+// 	dbuser, err := getDBuser(realm, user_id)
+// 	if err != nil {
+// 		c.Flash().Add("warning", err.Error())
+// 		c.Redirect(301, "/")
+// 	}
+// 	mac := readlog(user_id)
+// 	userLog := userlog(user_id, mac)
+
+// 	c.Set("userLog", userLog)
+// 	c.Set("staticIP", dbuser.StaticIP)
+// 	c.Set("singleUserRecord", singleUserRecord)
+// 	c.Set("singleUser", user)
+// 	c.Set("singleDay", dbuser.Days)
+// 	c.Set("realm", realm)
+
+// 	return c.Render(http.StatusOK, r.HTML("html/user.plush.html"))
+// }
+
+func UserTableHandler(c buffalo.Context) error {
+	realm := c.Param("realm")
+	update := c.Param("update")
+	var option bool
+	if update == "true" {
+		option = true
+	}
+
+	users, err := getUsersTable(realm, option)
+	if err != nil {
+		c.Flash().Add("warning", "sslvpn "+realm+"-Users update failed")
+		c.Redirect(301, "/")
+	}
+
+	c.Set("newUsers", users)
+	c.Set("realm", realm)
+
+	return c.Render(http.StatusOK, r.HTML("html/usertable.html"))
+}
+
+func UserStatusHandler(c buffalo.Context) error {
+	user_id := c.Param("user_id")
+	realm := c.Param("realm")
+	status := c.Param("status")
+	var update bool
+	if status == "true" {
+		update = true
+	}
+	updateStatus(realm, user_id, update)
+
+	c.Redirect(302, "/user/"+realm+"/"+user_id)
+	return nil
+}
+
+func PwdResetHandler(c buffalo.Context) error {
+	user_id := c.Param("user_id")
+	realm := c.Param("realm")
+	resetPW(realm, user_id)
+
+	c.Redirect(302, "/user/"+realm+"/"+user_id)
+	return nil
+}
+
+func RealmUserHandler(c buffalo.Context) error {
+	user_id := c.Param("user_id")
+	realm := c.Param("realm")
+	var singleUserRecord Records
+
+	activeUsers, err := getActiveUsers(user_id, "")
+	if err != nil {
+		fmt.Println(err)
+		c.Flash().Add("warning", err.Error())
+		c.Redirect(301, "/")
+	}
+	if len(activeUsers) != 0 {
+		singleUserRecord = activeUsers[0]
+		fmt.Println(singleUserRecord)
+	} else {
+		singleUserRecord = Records{"", "", "", "", "", "", ""}
+	}
+
+	user, err := getSingleUserdata(realm, user_id)
+	if err != nil {
+		fmt.Println(err)
+		c.Redirect(301, "/")
+	}
+	if user.Username == "" {
+		c.Redirect(301, "/")
+	}
+	//fmt.Println(user)
+
+	userTable, err := getSingleUserTable(realm, user_id)
+	if err != nil {
+		c.Flash().Add("warning", err.Error())
+		c.Redirect(301, "/")
+	}
+	//fmt.Println(userTable)
+	mac := readlog(user_id)
+	userLog := userlog(user_id, mac)
+
+	c.Set("userLog", userLog)
+	c.Set("staticIP", userTable.UserHistory.StaticIP)
+	c.Set("singleUserRecord", singleUserRecord)
+	c.Set("singleUser", user)
+	c.Set("singleDay", userTable.UserHistory.Days)
+	c.Set("realm", realm)
+
+	return c.Render(http.StatusOK, r.HTML("html/user.plush.html"))
 }

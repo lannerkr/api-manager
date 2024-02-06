@@ -1,7 +1,7 @@
 {
 	"TotpServer": "01.PCS-TOTP",
 	"PulseUri": "https://192.168.0.174",
-	"PulseApiKey": "9AbNszgv5v/35SqucmPtye6J7wYppEqa04V9ehKpTAw=",
+	"PulseApiKey": "cA5Vta3Mg5rl/l2ebi0iYScH0j9evUfGs361vtD6JBo=",
 	"AuthStore": "02.store.local",
 	"AuthPartner": "03.partner.local",
 	"AuthEmp": "emp.local",
@@ -12,7 +12,7 @@
 	"PPSAuthEmp": "03.emp-local",
 	"DBUri": "mongodb://mongoadmin:secret@192.168.0.157:27017/?retryWrites=true&w=majority",
 	"ApiLog": "/var/log/syslog",
-	"Htpasswd": "/data/docker/utils/nginx/.htpasswd",
+	"Htpasswd": "/data/docker/utils/api-manager-2/.htpasswd",
 	"Cert": "/home/physis/golang/src/go/api-manager/ex.physis.kr.cer",
 	"CertKey": "/home/physis/golang/src/go/api-manager/ex.physis.kr.key",
 	"IPaccess": ["192.168.0.198", "192.168.0.10", "192.168.0.199", "192.168.0.169"],

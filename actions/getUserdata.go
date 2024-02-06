@@ -19,10 +19,11 @@ type Payload struct {
 	User []Userdata `json:"user"`
 }
 type Userdata struct {
-	Username  string `json:"username"`
-	Fullname  string `json:"fullname"`
-	Enabled   string `json:"enabled"`
-	PwdChange string `json:"change-password-at-signin"`
+	Username  string `json:"username" bson:"username"`
+	Fullname  string `json:"fullname" bson:"fullname"`
+	Enabled   string `json:"enabled" bson:"enabled"`
+	PwdChange string `json:"change-password-at-signin" bson:"change-password-at-signin"`
+	Realm     string `json:"realm,omitempty" bson:"realm"`
 }
 
 type PPSuser struct {

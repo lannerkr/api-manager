@@ -1,0 +1,370 @@
+
+<div class="container">
+	<table>
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+		<td><div class="navbar-brand col-md-3 col-lg-2 me-0 px-3">Single User :   <%= singleUser.Username %></div></td>
+		<td> </td>
+
+		</div>
+	</table>
+	
+	<section>
+    <table class="table table-striped" style="text-align: center;">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top"></div>
+        <thead>
+          <th>사용자 ID</th> 
+          <th>설정된 고정 IP</th> 
+          <th>사용자 상태</th> 
+          <th>비밀번호 초기화 상태</th> 
+          <th style="width: 20%;">마지막 로그인 날짜</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a>
+                  <% let paths = "user/" + realm + "/" + singleUser.Username %>
+                  <%= linkTo(paths) { %>
+                  <%= singleUser.Username %>
+                  <% } %>
+                </a></td>
+                <td><%= staticIP %></td>
+                <td>
+                  <%= if(singleUser.Enabled == false) { %>
+                    <textarea style="display:none;" id="1">
+                      <%= "/user/status/" + realm + "/" + singleUser.Username + "/?status=true" %>
+
+                    </textarea>
+                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(1)">
+                        Disabled
+                    </button>
+                  <% } else { %>
+                    <textarea style="display:none;" id="2">
+                      <%= "/user/status/" + realm + "/" + singleUser.Username + "/?status=false" %>
+                    </textarea>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(2)">
+                        Enabled
+                    </button>
+                  <% } %>
+                </td>
+                <td>
+                  <%= if(singleUser.PwdChange == true) { %>
+                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">
+                      초기화완료
+                    </button>
+                  <% } else { %>
+                    <textarea style="display:none;" id="3">
+                      <%= "/user/resetPassword/" + realm + "/" + singleUser.Username %>
+                    </textarea>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(3)">
+                      변경됨
+                    </button>
+                  <% } %>
+                </td>
+                <td><%= singleDay %> 
+
+                </td>
+              </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-striped" style="text-align: center;">
+        <thead>
+          <th style="width: 33.3%;">비밀번호 잠김 해제</th> <th style="width: 33.3%;">OTP 잠김 해제</th> <th style="width: 33.3%;">OTP 초기화</th>
+        </thead>
+        <tbody>
+            <tr>
+              <td>
+                <%= if (singleUserRecord.Username == "") { %>
+                  <textarea style="display:none;" id="4">
+                    <%= "/user/unlockPwd/" + realm + "/" + singleUser.Username %>
+                  </textarea>
+                  <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(4)">PWD Unlock</button>
+                <% } %>
+              </td>
+              <td>
+                <textarea style="display:none;" id="5">
+                  <%= "/user/totpunlock/" + realm + "/" + singleUser.Username %>
+                </textarea>
+                <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(5)">OTP Unlock</button>
+              </td>
+              <td>
+                <textarea style="display:none;" id="6">
+                  <%= "/user/totp/" + realm + "/" + singleUser.Username %>
+                </textarea>
+                <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(6)">OTP Reset</button>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-striped" style="text-align: center;">
+        <thead>
+          <th>realm</th> <th>roles</th> <th>connect-ip</th> <th>client-version</th> <th>Sign-in-time</th>
+        </thead>
+        <tbody>
+            <tr>
+              <td>
+                <% let paths = "user/" + singleUserRecord.Realm %>
+                <%= linkTo(paths) { %>
+                <%= singleUserRecord.Realm %>
+                <% } %>
+              </td>
+              <td>
+                <%= if (singleUserRecord.Role == "") { %>
+                <div style="display:none;">
+                <% } else { %>
+                <div>
+                <% } %>
+                <%= if (singleUserRecord.Role == "unapproved") { %>
+                  <% let paths = "user/approve/" + singleUserRecord.Realm + "/" + singleUserRecord.Username %>
+                  <%= linkTo(paths) { %>
+                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">MAC 승인처리</button>
+                  <% } %>
+                <% } else if (singleUserRecord.Role == "USB-permit") { %>
+                  <% if (singleUserRecord.Realm.includes(store)) { %>
+                  <% let paths = "user/protect/store/" + singleUserRecord.Username %>
+                  <% } else { %>
+                    <% let paths = "user/protect/partner/" + singleUserRecord.Username %>
+                  <% } %>
+                  <%= linkTo(paths) { %>
+                    <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary">USB 차단</button>
+                  <% } %>
+                <% } else { %>  
+                <select type="button" class="btn btn-sm btn-outline-secondary" onchange="location = this.value;">
+                  <option>
+                    <%= singleUserRecord.Role %>
+                  </option> 
+                  <option value=<%= "/user/unapprove/" + singleUserRecord.Realm + "/" + singleUserRecord.Username %>>
+                    MAC 미승인
+                  </option>
+                  <%= if (singleUserRecord.Role != "USB-permit") { %>
+                  <option value=<%= "/user/permit/" + singleUserRecord.Realm + "/" + singleUserRecord.Username %>>
+                    USB 허용
+                  </option>
+                  <% } %>
+                </select>
+                <% } %>
+                </div>
+              </td>
+              <td><%= singleUserRecord.ConnectIP %></td>
+              <td><%= singleUserRecord.ClientVersion %></td>
+              <td><%= singleUserRecord.LoginTime %></td>
+              <td>
+                <%= if (singleUserRecord.Username != "") { %>
+                <% let paths = "user/delete/" + singleUserRecord.Realm + "/" + singleUserRecord.Username + "/"  + singleUserRecord.SessionID %>
+                <%= linkTo(paths) { %>
+                <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">강제 로그아웃</button>
+                <% } %>
+                <% } %>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-striped">
+        <thead>
+            <th>
+              LAST 15 LOGS &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="toggleTalbe" onclick="toggleTableFunc()">
+                Show Logs 
+              </button>
+              &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+              <% let paths = "user/" + realm + "/" + singleUser.Username %>
+              <%= linkTo(paths) { %>
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="toggleTalbe" onclick="">
+                새로고침 
+              </button>
+              <% } %>
+            </th>
+        </thead>
+        <tbody id="logTbody" style="width: 940px;">
+        <tr>
+          <td>
+              <p id="StringToArray0"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray1"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray2"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray3"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray4"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray5"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray6"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray7"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray8"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray9"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray10"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray11"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray12"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray13"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray14"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <p id="StringToArray15"></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div >
+            <textarea style="display:none;" id="write">
+              <%= userLog %>
+            </textarea>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      </table>
+
+    <script>
+        function myFunction() {
+
+          var string = document
+                    .getElementById("write").value;
+          var line = [];
+          var array = string.split("\n");
+          var lines = array.length-2;
+          for (var i=0; i<lines; i++) {
+
+            line[i] = array[i].split("[HIDE]");
+            var stringCheck = String(line[i][1]);
+
+              if ( stringCheck.includes("Account Still LockedOut") ){
+                var slog = stringCheck.split("Account Still LockedOut")
+                stringCheck = slog[0] + "<strong style=\"color: red;\">Account Still LockedOut</strong>" +slog[1]
+
+              } else if ( stringCheck.includes("failed") ){
+                var slog = stringCheck.split("failed")
+                stringCheck = slog[0] + "<strong style=\"color: orange;\">failed</strong>" +slog[1]
+
+              } else if ( stringCheck.includes("unlocked") ){
+                var slog = stringCheck.split("unlocked")
+                stringCheck = slog[0] + "<strong style=\"color: blue;\">unlocked</strong>" +slog[1]
+
+              } else if ( stringCheck.includes("Modified") ){
+                var slog = stringCheck.split("Modified")
+                stringCheck = slog[0] + "<strong style=\"color: blue;\">Modified</strong>" +slog[1]
+
+              } else if ( stringCheck.includes("modified") ){
+                var slog = stringCheck.split("modified")
+                stringCheck = slog[0] + "<strong style=\"color: blue;\">modified</strong>" +slog[1]
+
+              } else if ( stringCheck.includes("Created") ){
+                var slog = stringCheck.split("Created")
+                stringCheck = slog[0] + "<strong style=\"color: blue;\">Created</strong>" +slog[1]
+
+              } else if ( stringCheck.includes("Forcing off ") ){
+                var slog = stringCheck.split("Forcing off ")
+                stringCheck = slog[0] + "<strong style=\"color: blue;\">Forcing off </strong>" +slog[1]
+
+              } else if ( stringCheck.includes("updated") ){
+                var slog = stringCheck.split("updated")
+                stringCheck = slog[0] + "<strong style=\"color: blue;\">updated</strong>" +slog[1]
+
+              } else if ( stringCheck.includes("address cannot be allocated") ){
+                var slog = stringCheck.split("address cannot be allocated")
+                stringCheck = slog[0] + "<strong style=\"color: orange;\">address cannot be allocated</strong>" +slog[1]
+
+              } else if ( stringCheck.includes("ocked") ){
+                var slog = stringCheck.split("- ")
+                stringCheck = slog[0] + "- " + slog[1] + "- <strong style=\"color: red;\">" + slog[2] + "</strong> -" + slog[3]
+
+              }
+
+              var stringID = "StringToArray" + String(i);
+              document.getElementById(stringID).innerHTML = stringCheck;
+          }
+        }
+        myFunction();
+
+        function confirmMassage() {
+          let confirm_ask;
+          var confirm_location = document.getElementById(arguments[0]).value;
+          let confirm_cancle;
+
+          if (arguments[0] == 1) {
+            confirm_ask = "사용자를 활성화 하시겠습니까?";
+            confirm_cancle = "사용자를 활성화를 취소하였습니다!";
+          } else if (arguments[0] == 2) {
+            confirm_ask = "사용자를 비활성화 하시겠습니까?";
+            confirm_cancle = "사용자를 비활성화를 취소하였습니다!";
+
+          } else if (arguments[0] == 3) {
+            confirm_ask = "사용자 비밀번호를 초기화 하시겠습니까?";
+            confirm_cancle = "사용자 비밀번호 초기화를 취소하였습니다!";
+          } else if (arguments[0] == 4) {
+            confirm_ask = "사용자 비밀번호 잠김 해제 하시겠습니까?";
+            confirm_cancle = "사용자 비밀번호 잠김 해제를 취소하였습니다!";
+
+          } else if (arguments[0] == 5) {
+            confirm_ask = "사용자 OTP 잠김 해제 하시겠습니까?";
+            confirm_cancle = "사용자 OTP 잠김 해제를 취소하였습니다!";
+          } else if (arguments[0] == 6) {
+            confirm_ask = "사용자 OTP를 초기화 하시겠습니까?";
+            confirm_cancle = "사용자 OTP 초기화를 취소하였습니다!";
+
+          } else {
+            alert("arguments error")
+          }
+
+          if (confirm(confirm_ask) == true) {
+            location.href = confirm_location;
+          } else {
+            alert(confirm_cancle);
+          }
+        }
+    </script>
+  </section>

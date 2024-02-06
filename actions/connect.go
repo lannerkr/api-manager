@@ -22,6 +22,8 @@ func pulseReq(realm, method, url string, buff io.Reader) (resp *http.Response, e
 		auth = configuration.AuthPartner
 	case "emp":
 		auth = configuration.AuthEmp
+	case "EMP-GOTP":
+		auth = configuration.AuthEmp
 	default:
 		err := fmt.Errorf("realm %v is not available", r)
 		return nil, err
@@ -98,6 +100,8 @@ func ppsReq(realm, method, url string, buff io.Reader) (resp *http.Response, err
 	case "partner":
 		auth = configuration.PPSAuthPartner
 	case "emp":
+		auth = configuration.PPSAuthEmp
+	case "EMP-GOTP":
 		auth = configuration.PPSAuthEmp
 	default:
 		err := fmt.Errorf("realm %v is not available", r)

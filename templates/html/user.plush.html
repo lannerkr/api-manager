@@ -30,14 +30,15 @@
                 <td>
                   <%= if(singleUser.Enabled == false) { %>
                     <textarea style="display:none;" id="1">
-                      <%= "/user/" + singleUser.Enabled + "/" + realm + "/" + singleUser.Username %>
+                      <%= "/user/status/" + realm + "/" + singleUser.Username + "/?status=true" %>
+
                     </textarea>
                     <button type="button" style="background-color: rgb(236, 169, 182);" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(1)">
                         Disabled
                     </button>
                   <% } else { %>
                     <textarea style="display:none;" id="2">
-                      <%= "/user/" + singleUser.Enabled + "/" + realm + "/" + singleUser.Username %>
+                      <%= "/user/status/" + realm + "/" + singleUser.Username + "/?status=false" %>
                     </textarea>
                     <button type="button" class="btn btn-sm btn-outline-secondary" onclick="confirmMassage(2)">
                         Enabled
@@ -59,9 +60,7 @@
                   <% } %>
                 </td>
                 <td><%= singleDay %> 
-                  <%= if(singleDay >= 0) { %>
-                  일전
-                  <% } %>
+
                 </td>
               </tr>
         </tbody>
