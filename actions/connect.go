@@ -143,6 +143,7 @@ func ppsSysReq(method, url string, buff io.Reader) (resp *http.Response, err err
 
 	req, err := http.NewRequest(method, pUri, buff)
 	if err != nil {
+		//fmt.Printf("ppsSysReq Error 1 : %v\n", err)
 		return nil, err
 	}
 
@@ -151,9 +152,10 @@ func ppsSysReq(method, url string, buff io.Reader) (resp *http.Response, err err
 
 	resp, err = client.Do(req)
 	if err != nil {
+		//fmt.Printf("ppsSysReq Error 2 : %v\n", err)
 		return nil, err
 	}
-
+	//fmt.Printf("ppsSysReq resp : %v\n", resp)
 	return resp, nil
 }
 

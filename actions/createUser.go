@@ -37,7 +37,7 @@ func userCreate(realm, user, ip, mac string) (err1, err2, err3 error) {
 		}
 	}
 
-	if ip != "" {
+	if ip != "" && realm != "emp" {
 		if err := addUserPPS(realm, user, ip); err != nil {
 			err2 = err
 		}
@@ -81,6 +81,7 @@ func addUserPulse(realm, user string) error {
 	defer resp.Body.Close()
 
 	respStrings := respString(resp, "POST")
+	fmt.Printf("PCS response : %v\n", respStrings)
 
 	if resp.StatusCode == 201 {
 
@@ -100,7 +101,7 @@ func addUserPulse(realm, user string) error {
 }
 
 func addUserPPS(realm, user, ip string) error {
-	//fmt.Println(realm, user)
+	fmt.Println(realm, user)
 
 	url := "/local/users/user"
 	var newatt []AttTable
@@ -126,10 +127,11 @@ func addUserPPS(realm, user, ip string) error {
 		fmt.Println(err)
 		return err
 	}
-	//fmt.Println(resp.StatusCode)
+	fmt.Printf("PPS response code : %v\n", resp.StatusCode)
 	defer resp.Body.Close()
 
 	respStrings := respString(resp, "POST")
+	fmt.Printf("PPS response : %v\n", respStrings)
 	if resp.StatusCode == 201 {
 		if strings.Contains(respStrings, PostOK) {
 			fmt.Printf("static-ip for user : %v has been added successfully\n", user)
@@ -211,7 +213,7 @@ func macApprove(mac string) error {
 		log.Fatal(err)
 	}
 	bodyString := string(bodyBytes)
-	//fmt.Println(bodyString)
+	fmt.Printf("macApprove response: %v\n", bodyString)
 
 	if strings.Contains(bodyString, "Successfully updated") {
 		return nil
@@ -316,6 +318,41 @@ func macProtect(mac string) error {
 	}
 	bodyString := string(bodyBytes)
 	//fmt.Println(bodyString)
+
+	if strings.Contains(bodyString, "Successfully updated") {
+		return nil
+	} else {
+		bodyString = strings.ReplaceAll(bodyString, "{", "")
+		bodyString = strings.ReplaceAll(bodyString, "}", "")
+		fmt.Println(bodyString)
+		return fmt.Errorf(bodyString)
+	}
+}
+
+func EMPmacApprove(mac string) error {
+
+	url := "profiler/endpoints/simplified/" + mac
+	// fmt.Println(url)
+	setApprove := map[string]string{
+		"notes":  "emp",
+		"status": "approved",
+	}
+	pbytes, _ := json.Marshal(setApprove)
+	buff := bytes.NewBuffer(pbytes)
+
+	resp, err := ppsSysReq("PUT", url, buff)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	defer resp.Body.Close()
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bodyString := string(bodyBytes)
+	//fmt.Printf("EMPmacApprove response: %v\n", bodyString)
 
 	if strings.Contains(bodyString, "Successfully updated") {
 		return nil

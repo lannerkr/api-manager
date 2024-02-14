@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gobuffalo/buffalo"
 )
@@ -143,6 +144,13 @@ func ApproveHandler(c buffalo.Context) error {
 	if user_mac == "" {
 		warning := "사용자 MAC 을 찾을 수 없습니다. 사용자 재로그인 후 다시 사용해 주십시오."
 		c.Flash().Add("warning", warning)
+	} else if realm == "EMP-GOTP" {
+		if err := EMPmacApprove(user_mac); err != nil {
+			c.Flash().Add("warning", err.Error())
+		} else {
+			inform := "mac-address : " + user_mac + " 승인처리가 완료 되었습니다!"
+			c.Flash().Add("success", inform)
+		}
 	} else if err := macApprove(user_mac); err != nil {
 		c.Flash().Add("warning", err.Error())
 	} else {
@@ -435,6 +443,7 @@ func UserTableHandler(c buffalo.Context) error {
 		c.Redirect(301, "/")
 	}
 
+	c.Set("timeNow", time.Now())
 	c.Set("newUsers", users)
 	c.Set("realm", realm)
 
@@ -477,7 +486,7 @@ func RealmUserHandler(c buffalo.Context) error {
 	}
 	if len(activeUsers) != 0 {
 		singleUserRecord = activeUsers[0]
-		fmt.Println(singleUserRecord)
+		//fmt.Println(singleUserRecord)
 	} else {
 		singleUserRecord = Records{"", "", "", "", "", "", ""}
 	}

@@ -21,7 +21,7 @@ type UsersHistory struct {
 	Enabled    string    `json:"enabled" bson:"enabled"`
 	LastLogin  time.Time `json:"lastLogin" bson:"last_login"`
 	Realm      string    `json:"realm,omitempty" bson:"realm"`
-	Days       int64     `json:"days" bson:"days"`
+	Days       int       `json:"days" bson:"days"`
 	AccExpires time.Time `json:"accountExpires" bson:"accountExpires"`
 	StaticIP   string    `json:"Static_IP" bson:"Static_IP"`
 	FramedIP   string    `json:"framedip" bson:"framedip"`

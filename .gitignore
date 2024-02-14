@@ -8,3 +8,4 @@ docker-image/api-manager-v3.1.1
 docker-image/api-manager-v3.1.1.tar
 docker-image/api-manager-v3.1.tar
 docker-image/api-manager-v3.2
+.htpasswd

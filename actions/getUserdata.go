@@ -48,64 +48,64 @@ type PPSUserdata struct {
 	AttributesTables AttributesTable `json:"attributes-table"`
 }
 
-func getUsersdata(realm string) (u []Userdata, d map[string]string, err error) {
+// func getUsersdata(realm string) (u []Userdata, d map[string]string, err error) {
 
-	url := "/local/users"
+// 	url := "/local/users"
 
-	resp, err := pulseReq(realm, "GET", url, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer resp.Body.Close()
+// 	resp, err := pulseReq(realm, "GET", url, nil)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	defer resp.Body.Close()
 
-	decoder := json.NewDecoder(resp.Body)
-	user := Payload{}
-	if err := decoder.Decode(&user); err != nil {
-		fmt.Println(err)
-	}
-	users := user.User
-	daysFromLastlogin := getDays(users)
+// 	decoder := json.NewDecoder(resp.Body)
+// 	user := Payload{}
+// 	if err := decoder.Decode(&user); err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	users := user.User
+// 	daysFromLastlogin := getDays(users)
 
-	return users, daysFromLastlogin, nil
-}
+// 	return users, daysFromLastlogin, nil
+// }
 
-func getDays(u []Userdata) map[string]string {
+// func getDays(u []Userdata) map[string]string {
 
-	uri := configuration.DBUri
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer func() {
-		if err = client.Disconnect(context.TODO()); err != nil {
-			fmt.Println(err)
-		}
-	}()
+// 	uri := configuration.DBUri
+// 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	defer func() {
+// 		if err = client.Disconnect(context.TODO()); err != nil {
+// 			fmt.Println(err)
+// 		}
+// 	}()
 
-	// Ping the primary
-	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
-		fmt.Println(err)
-	}
+// 	// Ping the primary
+// 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
+// 		fmt.Println(err)
+// 	}
 
-	//insert or update user history
-	coll := client.Database("ldapDB").Collection("user_history")
+// 	//insert or update user history
+// 	coll := client.Database("ldapDB").Collection("user_history")
 
-	var daymap map[string]string = make(map[string]string)
-	for i := 0; i < len(u); i++ {
-		var result bson.M
-		if err := coll.FindOne(context.TODO(), bson.M{"user_name": u[i].Username}).Decode(&result); err != nil {
-			continue
-		}
-		for k, v := range result {
-			if k == "days" {
-				vs := fmt.Sprint(v)
-				daymap[u[i].Username] = vs
-				break
-			}
-		}
-	}
-	return daymap
-}
+// 	var daymap map[string]string = make(map[string]string)
+// 	for i := 0; i < len(u); i++ {
+// 		var result bson.M
+// 		if err := coll.FindOne(context.TODO(), bson.M{"user_name": u[i].Username}).Decode(&result); err != nil {
+// 			continue
+// 		}
+// 		for k, v := range result {
+// 			if k == "days" {
+// 				vs := fmt.Sprint(v)
+// 				daymap[u[i].Username] = vs
+// 				break
+// 			}
+// 		}
+// 	}
+// 	return daymap
+// }
 
 func getUserdata(realm, userid string) (u Userdata, d map[string]string, err error) {
 

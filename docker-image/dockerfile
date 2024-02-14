@@ -2,11 +2,15 @@ FROM minideb-kr:latest
 
 MAINTAINER "lannerkr@gmail.com"
 
-COPY ./api-manager-v3.2.1 /usr/local/bin
+COPY ./api-manager-v3.2.2 /usr/local/bin
+COPY ./startup.sh /usr/local/bin
 
 WORKDIR /mnt/src
 
-ENTRYPOINT [ "api-manager-v3.2.1", "/mnt/src/conf.json" ]
+##ENTRYPOINT [ "api-manager-v3.2.1", "/mnt/src/conf.json" ]
+ENTRYPOINT [ "startup.sh" ]
+##CMD [ "api-manager-v3.2.1", "/mnt/src/conf.json" ]
+## docker run -d --name api-manager-3.2.1-d  --network db-network -p 8443:8443  -v /home/physis/golang/src/go/api-manager-v3:/mnt/src  -v /var/log:/var/log lannerkr/api-manager:debug /mnt/src/api-manager /mnt/src/conf-d.json
 
 ##VOLUME ["/home/physis/golang/src/go/api-manager/docker-image", "/mnt/src" ]
 

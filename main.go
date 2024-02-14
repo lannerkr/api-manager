@@ -58,12 +58,20 @@ package main
 // version 3.1.1
 // user create bug fix
 // version 3.1.2
-// <div container> style customize (max width 1000 -> 1500)
+// <div container> style customize (max width 1000 -> 1500) at [application.plush.html]
 // userTable page optimize
 // version 3.2
 // userTable ReDesign
 // version 3.2.1
 // singleuserTable bug fix
+// version 3.2.2
+// bug fix and optimize
+// change userHistory Days type int64 -> int [userTables.go]
+// add timeNow at [UserTableHandler]
+// last_login customize at [usertable.html]
+// change usertable to order by last_login at [application.plush.html]
+// emp user create modify [createUser.go]
+// EMPmacApprove customize [ApproveHandler] [EMPmacApprove()]
 
 import (
 	"log"

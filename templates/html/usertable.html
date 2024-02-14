@@ -31,13 +31,16 @@
 							<th>사용자 상태</th>
 							<th>고정 IP</th>
 							<th>사용 IP</th>
-							<th style="width: 20%;">로그인후 날짜</th>
+							<th style="width: 20%;">마지막 로그인</th>
 							<th>계정 만료일</th>
 						</tr>
 					</thead>
 					<tbody>
+						<% if (realm == "EMP-GOTP") { let overday = 30 } else { let overday = 90 } %>
 						<%= for (user) in newUsers { %>
 						<tr>
+							<% if (user.UserHistory.AccExpires.Year() > 3000) { let year3000 = true } else { let year3000 = false } %>
+							<% let days30 = user.UserHistory.LastLogin.AddDate(0,0,overday) %>
 							<td>
 							  <% let paths = "user/" + realm + "/" + user.Username %>
 							  <%= linkTo(paths) { %>
@@ -56,17 +59,24 @@
 								<%= user.UserHistory.StaticIP %>
 							</td>
 							<td><%= user.UserHistory.FramedIP %></td>
-							<td><%= user.UserHistory.Days %></td>
+							<td>
+								<% let lastL = user.UserHistory.LastLogin.Local() %>
+								<%= if (user.UserHistory.LastLogin.Year() < 1000) { %>
+									-
+								<% } else if (timeNow.After(days30)) { %>
+									<div style="color:red"><%= lastL.Format("2006-01-02T15:04") %></div>
+								<% } else { %>
+									<%= lastL.Format("2006-01-02T15:04") %>
+								<% } %>
+							</td>
 							<td>
 								<%= if (user.UserHistory.AccExpires.IsZero()) { %>
-									NULL
-								<% } else { %> 
-								<% 
-									let expires = fn(n) {
-										return n.Format("2006-01-02T15:04")
-									}
-								%>
-								<%= expires(user.UserHistory.AccExpires.Local()) %>
+									-
+								<% } else if ( year3000 ) { %>
+									-
+								<% } else { %>
+									<% let expD = user.UserHistory.AccExpires.Local() %>
+									<%= expD.Format("2006-01-02") %>
 								<% } %>
 							</td>
 							</tr>
