@@ -2,7 +2,7 @@ FROM minideb-kr:latest
 
 MAINTAINER "lannerkr@gmail.com"
 
-COPY ./api-manager-v3.2.2 /usr/local/bin
+COPY ./api-manager-v3.2.3 /usr/local/bin
 COPY ./startup.sh /usr/local/bin
 
 WORKDIR /mnt/src

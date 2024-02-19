@@ -442,6 +442,29 @@ func UserTableHandler(c buffalo.Context) error {
 		c.Flash().Add("warning", "sslvpn "+realm+"-Users update failed")
 		c.Redirect(301, "/")
 	}
+	var overday int = 90
+	if realm == "EMP-GOTP" {
+		overday = 30
+	}
+	//st := time.Now()
+	//fmt.Printf("start time : %v\n", st)
+	for i, user := range users {
+
+		if user.UserHistory.LastLogin.Year() > 1000 {
+			users[i].LastString = user.UserHistory.LastLogin.Local().Format("2006-01-02T15:04")
+		}
+		if user.UserHistory.LastLogin.Local().AddDate(0, 0, overday).Before(time.Now()) {
+			users[i].Over30 = true
+		}
+
+		if !user.UserHistory.AccExpires.IsZero() && user.UserHistory.AccExpires.Year() < 3000 {
+			users[i].ExpireString = user.UserHistory.AccExpires.Local().Format("2006-01-02")
+		}
+		if user.UserHistory.AccExpires.Before(time.Now()) {
+			users[i].Expired = true
+		}
+	}
+	//fmt.Printf("end time : %v\n", time.Since(st))
 
 	c.Set("timeNow", time.Now())
 	c.Set("newUsers", users)

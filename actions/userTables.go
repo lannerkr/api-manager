@@ -27,11 +27,15 @@ type UsersHistory struct {
 	FramedIP   string    `json:"framedip" bson:"framedip"`
 }
 type UsersTable struct {
-	Username    string `json:"username" bson:"user_name"`
-	Fullname    string `json:"fullname" bson:"fullname"`
-	Enabled     string `json:"enabled" bson:"enabled"`
-	PwdChange   string `json:"change-password-at-signin" bson:"cpas"`
-	UserHistory UsersHistory
+	Username     string `json:"username" bson:"user_name"`
+	Fullname     string `json:"fullname" bson:"fullname"`
+	Enabled      string `json:"enabled" bson:"enabled"`
+	PwdChange    string `json:"change-password-at-signin" bson:"cpas"`
+	UserHistory  UsersHistory
+	Over30       bool
+	Expired      bool
+	LastString   string
+	ExpireString string
 }
 
 func getUsersPCS(realm string) (userTable []UsersTable, err error) {

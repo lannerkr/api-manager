@@ -31,7 +31,7 @@
 							<th>사용자 상태</th>
 							<th>고정 IP</th>
 							<th>사용 IP</th>
-							<th style="width: 20%;">로그인후 날짜</th>
+							<th style="width: 20%;">마지막 로그인</th>
 							<th>계정 만료일</th>
 						</tr>
 					</thead>
@@ -44,29 +44,28 @@
 							  <%= user.Username %>
 							  <% } %>
 							</td>
-							  <td style="text-align: left;"><%= user.Fullname %></td>
-							  <td>
+							<td style="text-align: left;"><%= user.Fullname %></td>
+							<td>
 								<%= if (user.Enabled == false) { %>
 									<div style="color:red"><%= user.Enabled %></div>
 								<% } else { %>  
 								<%= user.Enabled %>
 								<% } %>
 							</td>
-							<td>
-								<%= user.UserHistory.StaticIP %>
-							</td>
+							<td><%= user.UserHistory.StaticIP %></td>
 							<td><%= user.UserHistory.FramedIP %></td>
-							<td><%= user.UserHistory.Days %></td>
 							<td>
-								<%= if (user.UserHistory.AccExpires.IsZero()) { %>
-									NULL
-								<% } else { %> 
-								<% 
-									let expires = fn(n) {
-										return n.Format("2006-01-02T15:04")
-									}
-								%>
-								<%= expires(user.UserHistory.AccExpires.Local()) %>
+								<%= if (user.Over30 == true) { %>
+									<div style="color:red"><%= user.LastString %></div>
+								<% } else { %>  
+									<%= user.LastString %>
+								<% } %>
+							</td>
+							<td>
+								<%= if (user.Expired == true) { %>
+									<div style="color:red"><%= user.ExpireString %></div>
+								<% } else { %>  
+									<%= user.ExpireString %>
 								<% } %>
 							</td>
 							</tr>
@@ -78,3 +77,4 @@
 			</div>
 		</div>
 	</section>
+

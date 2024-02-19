@@ -36,47 +36,36 @@
 						</tr>
 					</thead>
 					<tbody>
-						<% if (realm == "EMP-GOTP") { let overday = 30 } else { let overday = 90 } %>
 						<%= for (user) in newUsers { %>
 						<tr>
-							<% if (user.UserHistory.AccExpires.Year() > 3000) { let year3000 = true } else { let year3000 = false } %>
-							<% let days30 = user.UserHistory.LastLogin.AddDate(0,0,overday) %>
 							<td>
 							  <% let paths = "user/" + realm + "/" + user.Username %>
 							  <%= linkTo(paths) { %>
 							  <%= user.Username %>
 							  <% } %>
 							</td>
-							  <td style="text-align: left;"><%= user.Fullname %></td>
-							  <td>
+							<td style="text-align: left;"><%= user.Fullname %></td>
+							<td>
 								<%= if (user.Enabled == false) { %>
 									<div style="color:red"><%= user.Enabled %></div>
 								<% } else { %>  
 								<%= user.Enabled %>
 								<% } %>
 							</td>
-							<td>
-								<%= user.UserHistory.StaticIP %>
-							</td>
+							<td><%= user.UserHistory.StaticIP %></td>
 							<td><%= user.UserHistory.FramedIP %></td>
 							<td>
-								<% let lastL = user.UserHistory.LastLogin.Local() %>
-								<%= if (user.UserHistory.LastLogin.Year() < 1000) { %>
-									-
-								<% } else if (timeNow.After(days30)) { %>
-									<div style="color:red"><%= lastL.Format("2006-01-02T15:04") %></div>
-								<% } else { %>
-									<%= lastL.Format("2006-01-02T15:04") %>
+								<%= if (user.Over30 == true) { %>
+									<div style="color:red"><%= user.LastString %></div>
+								<% } else { %>  
+									<%= user.LastString %>
 								<% } %>
 							</td>
 							<td>
-								<%= if (user.UserHistory.AccExpires.IsZero()) { %>
-									-
-								<% } else if ( year3000 ) { %>
-									-
-								<% } else { %>
-									<% let expD = user.UserHistory.AccExpires.Local() %>
-									<%= expD.Format("2006-01-02") %>
+								<%= if (user.Expired == true) { %>
+									<div style="color:red"><%= user.ExpireString %></div>
+								<% } else { %>  
+									<%= user.ExpireString %>
 								<% } %>
 							</td>
 							</tr>
@@ -88,3 +77,4 @@
 			</div>
 		</div>
 	</section>
+
