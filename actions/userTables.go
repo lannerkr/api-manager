@@ -25,6 +25,7 @@ type UsersHistory struct {
 	AccExpires time.Time `json:"accountExpires" bson:"accountExpires"`
 	StaticIP   string    `json:"Static_IP" bson:"Static_IP"`
 	FramedIP   string    `json:"framedip" bson:"framedip"`
+	LoginName  string    `json:"login_name" bson:"login_name"`
 }
 type UsersTable struct {
 	Username     string `json:"username" bson:"user_name"`
@@ -273,12 +274,46 @@ func getSingleUserdata(realm, userid string) (u Userdata, err error) {
 	return user, nil
 }
 
-func getSingleUserTable(realm, user_id string) (userTable UsersTable, err error) {
+// func getSingleUserTable(realm, user_id string) (userTable UsersTable, err error) {
+// 	uri := configuration.DBUri
+// 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return userTable, err
+// 	}
+// 	defer func() {
+// 		if err = client.Disconnect(context.TODO()); err != nil {
+// 			fmt.Println(err)
+// 		}
+// 	}()
+
+// 	// Ping the primary
+// 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
+// 		fmt.Println(err)
+// 		return userTable, err
+// 	}
+
+// 	var realmColl string
+// 	if realm == "EMP-GOTP" {
+// 		realmColl = "userTable_" + "EMPGOTP"
+// 	} else {
+// 		realmColl = "userTable_" + realm
+// 	}
+// 	coll := client.Database("ldapDB").Collection(realmColl)
+
+// 	users := coll.FindOne(context.TODO(), bson.M{"user_name": user_id})
+// 	if err = users.Decode(&userTable); err != nil {
+// 		return userTable, err
+// 	}
+
+//		return userTable, nil
+//	}
+func getSingleUserHistory(realm, user_id string) (userHistory UsersHistory, err error) {
 	uri := configuration.DBUri
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
 		fmt.Println(err)
-		return userTable, err
+		return userHistory, err
 	}
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
@@ -289,21 +324,15 @@ func getSingleUserTable(realm, user_id string) (userTable UsersTable, err error)
 	// Ping the primary
 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
 		fmt.Println(err)
-		return userTable, err
+		return userHistory, err
 	}
 
-	var realmColl string
-	if realm == "EMP-GOTP" {
-		realmColl = "userTable_" + "EMPGOTP"
-	} else {
-		realmColl = "userTable_" + realm
-	}
-	coll := client.Database("ldapDB").Collection(realmColl)
+	coll := client.Database("ldapDB").Collection("user_history")
 
-	users := coll.FindOne(context.TODO(), bson.M{"user_name": user_id})
-	if err = users.Decode(&userTable); err != nil {
-		return userTable, err
+	users := coll.FindOne(context.TODO(), bson.M{"user_name": user_id, "realm": realm})
+	if err = users.Decode(&userHistory); err != nil {
+		return userHistory, err
 	}
 
-	return userTable, nil
+	return userHistory, nil
 }

@@ -74,6 +74,10 @@ package main
 // EMPmacApprove customize [ApproveHandler] [EMPmacApprove()]
 // version 3.2.3
 // userTable performance optimize [UserTableHandler] [userTables.go] [usertable.html]
+// version 3.2.3.1
+// userlog --ignore-case [readlog.go]
+// change singleusertable source "from userTable_ collection" -> "from user_history collection" [userTables.go] [home.go]
+// if loginUsername is different form user_name, get activeUserdata with loginUsername [home.go]
 
 import (
 	"log"

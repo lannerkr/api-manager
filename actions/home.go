@@ -500,8 +500,22 @@ func RealmUserHandler(c buffalo.Context) error {
 	user_id := c.Param("user_id")
 	realm := c.Param("realm")
 	var singleUserRecord Records
+	var loginname string
 
-	activeUsers, err := getActiveUsers(user_id, "")
+	userHistory, err := getSingleUserHistory(realm, user_id)
+	if err != nil {
+		c.Flash().Add("warning", err.Error())
+		c.Redirect(301, "/")
+	}
+
+	if userHistory.LoginName != "" && userHistory.LoginName != userHistory.Username {
+		loginname = userHistory.LoginName
+		fmt.Println("LoginUsername: ", loginname, ", username: ", user_id)
+	} else {
+		loginname = user_id
+	}
+
+	activeUsers, err := getActiveUsers(loginname, "")
 	if err != nil {
 		fmt.Println(err)
 		c.Flash().Add("warning", err.Error())
@@ -524,20 +538,15 @@ func RealmUserHandler(c buffalo.Context) error {
 	}
 	//fmt.Println(user)
 
-	userTable, err := getSingleUserTable(realm, user_id)
-	if err != nil {
-		c.Flash().Add("warning", err.Error())
-		c.Redirect(301, "/")
-	}
 	//fmt.Println(userTable)
 	mac := readlog(user_id)
 	userLog := userlog(user_id, mac)
 
 	c.Set("userLog", userLog)
-	c.Set("staticIP", userTable.UserHistory.StaticIP)
+	c.Set("staticIP", userHistory.StaticIP)
 	c.Set("singleUserRecord", singleUserRecord)
 	c.Set("singleUser", user)
-	c.Set("singleDay", userTable.UserHistory.Days)
+	c.Set("singleDay", userHistory.Days)
 	c.Set("realm", realm)
 
 	return c.Render(http.StatusOK, r.HTML("html/user.plush.html"))
