@@ -95,6 +95,7 @@ func App() *buffalo.App {
 		app.GET("/active/{count}", ActiveHandler)
 
 		app.GET("/user/create", CreateUserHandler)
+		app.GET("/user/upper/users", UserUpperHandler)
 		app.GET("/user/{realm}", UserTableHandler)
 		app.GET("/user/{realm}/{user_id}", RealmUserHandler)
 

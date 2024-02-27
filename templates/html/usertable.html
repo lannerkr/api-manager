@@ -11,7 +11,13 @@
 			  <% } %>
 			</td>
 			<td> </td>
-			<td width="60%" align="right">
+			<td width="40%" align="right">
+				<% let paths = "/user/upper/users" %>
+				<%= linkTo(paths) { %>
+				<button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">대문자ID사용자</button>
+				<% } %>
+			  </td>
+			<td width="20%" align="right">
 			  <% let paths = "/user/"+realm+"?update=true" %>
 			  <%= linkTo(paths) { %>
 			  <button type="button" style="background-color: rgb(208, 235, 174);" class="btn btn-sm btn-outline-secondary" onclick="">사용자 DB 업데이트</button>

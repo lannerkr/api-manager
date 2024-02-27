@@ -384,51 +384,6 @@ func StaticIPHandler(c buffalo.Context) (err error) {
 	return c.Render(http.StatusOK, r.HTML("html/staticip.html"))
 }
 
-// func EMPUserHandler(c buffalo.Context) error {
-// 	user_id := c.Param("user_id")
-// 	realm := "EMP-GOTP"
-// 	var singleUserRecord Records
-
-// 	activeUsers, err := getActiveUsers(user_id, "")
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		c.Flash().Add("warning", err.Error())
-// 		c.Redirect(301, "/")
-// 	}
-// 	if len(activeUsers) != 0 {
-// 		singleUserRecord = activeUsers[0]
-// 		fmt.Println(singleUserRecord)
-// 	} else {
-// 		singleUserRecord = Records{"", "", "", "", "", "", ""}
-// 	}
-
-// 	user, err := getSingleUserdata(realm, user_id)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		c.Redirect(301, "/")
-// 	}
-// 	if user.Username == "" {
-// 		c.Redirect(301, "/")
-// 	}
-
-// 	dbuser, err := getDBuser(realm, user_id)
-// 	if err != nil {
-// 		c.Flash().Add("warning", err.Error())
-// 		c.Redirect(301, "/")
-// 	}
-// 	mac := readlog(user_id)
-// 	userLog := userlog(user_id, mac)
-
-// 	c.Set("userLog", userLog)
-// 	c.Set("staticIP", dbuser.StaticIP)
-// 	c.Set("singleUserRecord", singleUserRecord)
-// 	c.Set("singleUser", user)
-// 	c.Set("singleDay", dbuser.Days)
-// 	c.Set("realm", realm)
-
-// 	return c.Render(http.StatusOK, r.HTML("html/user.plush.html"))
-// }
-
 func UserTableHandler(c buffalo.Context) error {
 	realm := c.Param("realm")
 	update := c.Param("update")
@@ -500,22 +455,37 @@ func RealmUserHandler(c buffalo.Context) error {
 	user_id := c.Param("user_id")
 	realm := c.Param("realm")
 	var singleUserRecord Records
-	var loginname string
+	//var loginname string
+	//var userHistory UsersHistory
 
-	userHistory, err := getSingleUserHistory(realm, user_id)
+	userHistorys, err := getSingleUserHistory(realm, user_id)
 	if err != nil {
 		c.Flash().Add("warning", err.Error())
 		c.Redirect(301, "/")
 	}
-
-	if userHistory.LoginName != "" && userHistory.LoginName != userHistory.Username {
-		loginname = userHistory.LoginName
-		fmt.Println("LoginUsername: ", loginname, ", username: ", user_id)
-	} else {
-		loginname = user_id
+	userHistory := userHistorys[0]
+	userHistory.LoginName = user_id
+	if len(userHistorys) > 1 {
+		for _, v := range userHistorys {
+			if v.LastLogin.After(userHistory.LastLogin) {
+				userHistory = v
+				userHistory.LoginName = v.Username
+			}
+		}
+		if err := updateDBloginname(realm, user_id, userHistory.LoginName); err != nil {
+			fmt.Println(err)
+		}
 	}
+	userHistory.Username = user_id
 
-	activeUsers, err := getActiveUsers(loginname, "")
+	// if userHistory.LoginName != "" && userHistory.LoginName != userHistory.Username {
+	// 	loginname = userHistory.LoginName
+	// 	fmt.Println("LoginUsername: ", loginname, ", username: ", user_id)
+	// } else {
+	// 	loginname = user_id
+	// }
+
+	activeUsers, err := getActiveUsers(userHistory.LoginName, "")
 	if err != nil {
 		fmt.Println(err)
 		c.Flash().Add("warning", err.Error())
@@ -550,4 +520,18 @@ func RealmUserHandler(c buffalo.Context) error {
 	c.Set("realm", realm)
 
 	return c.Render(http.StatusOK, r.HTML("html/user.plush.html"))
+}
+
+func UserUpperHandler(c buffalo.Context) error {
+
+	users, err := getUpperCaseUsersHistory()
+	if err != nil {
+		c.Flash().Add("warning", "sslvpn MisMatched Users update failed")
+		c.Redirect(301, "/")
+	}
+
+	c.Set("timeNow", time.Now())
+	c.Set("newUsers", users)
+
+	return c.Render(http.StatusOK, r.HTML("html/useruppertable.html"))
 }

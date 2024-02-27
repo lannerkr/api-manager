@@ -77,7 +77,12 @@ package main
 // version 3.2.3.1
 // userlog --ignore-case [readlog.go]
 // change singleusertable source "from userTable_ collection" -> "from user_history collection" [userTables.go] [home.go]
-// if loginUsername is different form user_name, get activeUserdata with loginUsername [home.go]
+// version 3.2.4
+// create upper-case username user page [app.go] [home.go] [userTables.go] [useruppertable.html]
+//  - search for the users whos user_name includes Upper case letter
+//  - list the users whos username is case-insetively same as searched users
+// customize getSingleUserHistory() to get list of users if case-insetively same user_name exist
+// then use the userHistory that the lastlogin time is most recent, and update login_name on user_history db [home.go/RealmUserHandler()]
 
 import (
 	"log"

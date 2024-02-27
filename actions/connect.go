@@ -35,7 +35,7 @@ func pulseReq(realm, method, url string, buff io.Reader) (resp *http.Response, e
 	apikey := pulseApiKey
 	pUri := pulseUri + "/api/v1/configuration/authentication/auth-servers/auth-server/" + auth + url
 
-	//fmt.Println(pUri)
+	//fmt.Println("pulsereq 001" + pUri)
 
 	req, err := http.NewRequest(method, pUri, buff)
 	if err != nil {

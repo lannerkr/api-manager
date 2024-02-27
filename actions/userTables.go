@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -114,7 +115,12 @@ TOP:
 			return nil, err
 		}
 		for i, u := range userTable {
-			userTable[i].UserHistory = userMap[u.Username]
+			if userMap[u.Username].LoginName != "" {
+				userTable[i].UserHistory = userMap[userMap[u.Username].LoginName]
+				//fmt.Printf("user history change:\n%v\n", userTable[i].UserHistory)
+			} else {
+				userTable[i].UserHistory = userMap[u.Username]
+			}
 		}
 		if err = putUserTableDB(realm, userTable); err != nil {
 			log.Println(err)
@@ -274,41 +280,7 @@ func getSingleUserdata(realm, userid string) (u Userdata, err error) {
 	return user, nil
 }
 
-// func getSingleUserTable(realm, user_id string) (userTable UsersTable, err error) {
-// 	uri := configuration.DBUri
-// 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return userTable, err
-// 	}
-// 	defer func() {
-// 		if err = client.Disconnect(context.TODO()); err != nil {
-// 			fmt.Println(err)
-// 		}
-// 	}()
-
-// 	// Ping the primary
-// 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
-// 		fmt.Println(err)
-// 		return userTable, err
-// 	}
-
-// 	var realmColl string
-// 	if realm == "EMP-GOTP" {
-// 		realmColl = "userTable_" + "EMPGOTP"
-// 	} else {
-// 		realmColl = "userTable_" + realm
-// 	}
-// 	coll := client.Database("ldapDB").Collection(realmColl)
-
-// 	users := coll.FindOne(context.TODO(), bson.M{"user_name": user_id})
-// 	if err = users.Decode(&userTable); err != nil {
-// 		return userTable, err
-// 	}
-
-//		return userTable, nil
-//	}
-func getSingleUserHistory(realm, user_id string) (userHistory UsersHistory, err error) {
+func getSingleUserHistory(realm, user_id string) (userHistory []UsersHistory, err error) {
 	uri := configuration.DBUri
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
@@ -329,10 +301,117 @@ func getSingleUserHistory(realm, user_id string) (userHistory UsersHistory, err 
 
 	coll := client.Database("ldapDB").Collection("user_history")
 
-	users := coll.FindOne(context.TODO(), bson.M{"user_name": user_id, "realm": realm})
-	if err = users.Decode(&userHistory); err != nil {
-		return userHistory, err
+	filter := bson.D{{Key: "realm", Value: realm}, {Key: "user_name", Value: bson.D{{Key: "$regex", Value: user_id}, {Key: "$options", Value: "i"}}}}
+	us, _ := coll.Find(context.TODO(), filter)
+	if err = us.All(context.TODO(), &userHistory); err != nil {
+		return nil, err
 	}
 
 	return userHistory, nil
+}
+
+type UpperUsersHistory struct {
+	LoginName  string    `json:"username" bson:"user_name"`
+	Enabled    string    `json:"enabled" bson:"enabled"`
+	LastLogin  time.Time `json:"lastLogin" bson:"last_login"`
+	Realm      string    `json:"realm,omitempty" bson:"realm"`
+	UserName   string
+	Days       int
+	LastString string
+}
+
+type UpperCaseUsers struct {
+	LoginName    string
+	UsersHistory []UpperUsersHistory
+}
+
+func getUpperCaseUsersHistory() (user []UpperCaseUsers, err error) {
+
+	var upperCasedUsers []UpperUsersHistory
+
+	uri := configuration.DBUri
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer func() {
+		if err = client.Disconnect(context.TODO()); err != nil {
+			log.Println(err)
+		}
+	}()
+	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	coll := client.Database("ldapDB").Collection("user_history")
+
+	filter := bson.D{{Key: "user_name", Value: bson.D{{Key: "$regex", Value: "[A-Z]"}}}}
+	//filter := bson.D{{Key: "enabled", Value: "False"}}
+
+	u, err := coll.Find(context.TODO(), filter)
+	if err = u.All(context.TODO(), &upperCasedUsers); err != nil {
+		return nil, err
+	}
+	//fmt.Printf("[upperCasedUsers] : \n%v\n", upperCasedUsers)
+	var uppercaseuser []UpperCaseUsers
+	for _, u := range upperCasedUsers {
+		var userN []UpperUsersHistory
+		filter := bson.D{{Key: "user_name", Value: bson.D{{Key: "$regex", Value: u.LoginName}, {Key: "$options", Value: "i"}}}}
+		us, _ := coll.Find(context.TODO(), filter)
+		if err = us.All(context.TODO(), &userN); err != nil {
+			return nil, err
+		}
+		//fmt.Println(" == [001]")
+		if len(userN) > 1 {
+			var newuser UpperCaseUsers
+			newuser.LoginName = u.LoginName
+			newuser.UsersHistory = userN
+			for _, v := range uppercaseuser {
+				if strings.EqualFold(v.LoginName, newuser.LoginName) {
+					//fmt.Println(" == [002]")
+					goto BRK
+				}
+			}
+			//fmt.Println(" == [003]")
+			uppercaseuser = append(uppercaseuser, newuser)
+			//fmt.Printf("[newuser Users] : \n%v\n", mismatchuser)
+		}
+	BRK:
+	}
+
+	//fmt.Printf("[MisMatch Users] : \n%v\n", mismatchuser)
+
+	return uppercaseuser, nil
+}
+
+func updateDBloginname(realm, user_id, loginname string) error {
+	uri := configuration.DBUri
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	defer func() {
+		if err = client.Disconnect(context.TODO()); err != nil {
+			log.Println(err)
+		}
+	}()
+	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
+		log.Println(err)
+		return err
+	}
+
+	coll := client.Database("ldapDB").Collection("user_history")
+
+	filter := bson.D{{Key: "realm", Value: realm}, {Key: "user_name", Value: user_id}}
+	lnUpdate := bson.M{"login_name": loginname}
+	update := bson.D{{Key: "$set", Value: lnUpdate}}
+
+	_, err = coll.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
