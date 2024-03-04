@@ -44,24 +44,20 @@
 										<%= if (record.Role == ".Administrators" || record.Role == "store-admin") { %>
 												<%= record.Username %>
 										<% } else { %>
-											<% if (record.Realm.includes(store)) { %>
-												<% let paths = "user/store/" + record.Username %>
-											<% } else { %>
-												<% let paths = "user/partner/" + record.Username %>
-											<% } %>
-										<%= linkTo(paths) { %>
-										<%= record.Username %>
-										<% } %>
+												<% let paths = "user/" + record.Realm + "/" + record.Username %>
+												<%= linkTo(paths) { %>
+												<%= record.Username %>
+												<% } %>
 										<% } %>
 								</td>
 								  <td>
 										<%= if (record.Role == ".Administrators" || record.Role == "store-admin") { %>
 												<%= record.Realm %>
 										<% } else { %>
-										<% let paths = "user/" + record.Realm %>
-										<%= linkTo(paths) { %>
-										<%= record.Realm %>
-										<% } %>
+												<% let paths = "user/" + record.Realm %>
+												<%= linkTo(paths) { %>
+												<%= record.Realm %>
+												<% } %>
 										<% } %>
 								</td>
 								<td><%= record.Role %></td>

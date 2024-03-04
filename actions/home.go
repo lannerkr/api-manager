@@ -452,7 +452,8 @@ func PwdResetHandler(c buffalo.Context) error {
 }
 
 func RealmUserHandler(c buffalo.Context) error {
-	user_id := c.Param("user_id")
+	user_id := strings.ToLower(c.Param("user_id"))
+
 	realm := c.Param("realm")
 	var singleUserRecord Records
 	//var loginname string
