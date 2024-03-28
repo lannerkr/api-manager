@@ -464,7 +464,11 @@ func RealmUserHandler(c buffalo.Context) error {
 		c.Flash().Add("warning", err.Error())
 		c.Redirect(301, "/")
 	}
-	userHistory := userHistorys[0]
+	var userHistory UsersHistory
+	if len(userHistorys) != 0 {
+		userHistory = userHistorys[0]
+	}
+
 	userHistory.LoginName = user_id
 	if len(userHistorys) > 1 {
 		for _, v := range userHistorys {

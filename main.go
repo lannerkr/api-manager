@@ -86,6 +86,8 @@ package main
 // version 3.2.4.1
 // single user page handler customize that requested user_id to lower case [home.go/RealmUserHandler()]
 // active user page link path customize [mainpage.html]
+// version 3.2.4.2
+// single user page hander bug fix. not exist user from user_history table results error page... [home.go/RealmUserHandler()]
 
 import (
 	"log"
