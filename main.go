@@ -88,6 +88,8 @@ package main
 // active user page link path customize [mainpage.html]
 // version 3.2.4.2
 // single user page hander bug fix. not exist user from user_history table results error page... [home.go/RealmUserHandler()]
+// version 3.2.4.2.1
+// apilog.log texture change
 
 import (
 	"log"

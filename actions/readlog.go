@@ -26,7 +26,8 @@ func readlog(user string) (mac string) {
 
 func userlog(user, mac string) (userLog string) {
 	apilog := configuration.ApiLog
-	readCmd := "tac " + apilog + " | grep -i -m 15 -E \"" + user + "|ADM31591.*" + mac + "\" | awk '{$1=\"\";$2=\"\";$3=\"\";$4=\"\";$5=\"\";print}'"
+	// readCmd := "tac " + apilog + " | grep -i -m 15 -E \"" + user + "|ADM31591.*" + mac + "\" | awk '{$1=\"\";$2=\"\";$3=\"\";$4=\"\";$5=\"\";print}'"
+	readCmd := "tac " + apilog + " | grep -i -m 15 -E \"" + user + "|ADM31591.*" + mac + "\""
 	cmd, output := exec.Command("sh", "-c", readCmd), new(strings.Builder)
 	cmd.Stdout = output
 	cmd.Run()
